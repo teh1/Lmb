@@ -39,6 +39,8 @@ public class NewZalog  extends  Zalog {
        z.StartZalog();
 
         z.SetKolPeriod(32);
+        z.ClickAddMainoButton();
+        z.SelectGroupMaino();
 
        // MainMenu menu = new MainMenu();
 

@@ -4,8 +4,8 @@ import Common.Driver;
 
 import org.sikuli.script.*;
 
-import java.awt.event.KeyEvent;
 import java.net.URISyntaxException;
+
 
 public class Zalog extends Driver{
     //private final float SEC = 0.5f;
@@ -84,51 +84,76 @@ public class Zalog extends Driver{
 
             KolPeriod.setX(KolPeriod.getX() + i);
             KolPeriod.setW(i);
-
+            //переприсваиваем новый регион, без этого клик срабатывает по LastMatch - старые, не изменный регион.
             KolPeriod = new Region(KolPeriod);
 
             KolPeriod.click(KolPeriod);
 
             boolean on;
-            //on = Key.isModifier(Key.NUM_LOCK);
-            on = Key.isLockOn('\ue03b');
-            System.out.println("sds = " + on);
-            System.out.println("sds111111111 = " + '\ue03b');
-            KolPeriod.type(Key.NUM_LOCK);
-
-            on = Key.isModifier(Key.NUM_LOCK);
-            System.out.println("sds = " + on);
-
+            //выкл/вкл NumLock так как коммбинация SHIFT +HOME не работает с включенным NumLock
+            on = (Key.isLockOn('\ue03b'));
+            if(on)
+                KolPeriod.type(Key.NUM_LOCK);
 
             KolPeriod.type(Key.HOME, Key.SHIFT);
             KolPeriod.type(Key.BACKSPACE);
             KolPeriod.type(String.valueOf(n));
-            KolPeriod.type(Key.NUM_LOCK);
 
-
-            /*KolPeriod.keyDown(Key.SHIFT);
-
-            KolPeriod.keyDown(Key.HOME);
-
-            KolPeriod.keyUp(Key.HOME);
-
-
-
-            KolPeriod.type(Key.BACKSPACE);
-            KolPeriod.keyUp();
-
-            */
-            //(Key.SHIFT+Key.HOME);
-            //KolPeriod.type(Key.BACKSPACE);
-           // KolPeriod.type(String.valueOf(n));
+            if(on)
+                KolPeriod.type(Key.NUM_LOCK);
         } catch (FindFailed findFailed) {
             findFailed.printStackTrace();
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
+    }
+
+    public void SetDateReturn(String DateReturn) {
+        int n;
+        if (DateReturn == null) DateReturn = "currentdate";
+        n = 1; //WorkDate - DateReturn;
+        SetKolPeriod(n);
 
     }
 
+    public void ClickAddMainoButton() {
+        try {
+            ZalogRG.find(new Pattern(path("Zalog\\B_Add"))).click();
+        } catch (FindFailed findFailed) {
+            findFailed.printStackTrace();
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
+    }
 
+    public void SelectGroupMaino(String str) {
+        Region Group = null;
+        try {
 
+            if (str.equals("Техника"))
+                Group = getDriver().find(new Pattern(path("GroupMaino\\Technics")));
+            if (str == null || str.equals("Драг.Металл"))
+                Group = getDriver().find(new Pattern(path("GroupMaino\\DragMetall")));
+            Group.click();
+        } catch (FindFailed findFailed) {
+            findFailed.printStackTrace();
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
+    }
+    public void SelectGroupMaino() {
+        Region Group = null;
+        try {
+            Group = getDriver().find(new Pattern(path("GroupMaino\\DragMetall")));
+            Group.doubleClick();
+        } catch (FindFailed findFailed) {
+            findFailed.printStackTrace();
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void SelectMaino() {
+
+    }
 }
