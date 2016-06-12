@@ -36,12 +36,13 @@ public class NewZalog  extends  Zalog {
     public void CreateZalog() throws FindFailed, URISyntaxException {
         System.out.println("test");
         Zalog z = new Zalog();
-       z.StartZalog();
+        z.SetDateReturn("01.01.2000");
+       /*z.StartZalog();
 
         z.SetKolPeriod(32);
         z.ClickAddMainoButton();
         z.SelectGroupMaino();
-
+*/
        // MainMenu menu = new MainMenu();
 
         //menu.mSessia().click();
