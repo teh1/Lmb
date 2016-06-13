@@ -1,6 +1,8 @@
 package TestCreateZalog;
 
 import Common.Common;
+import Common.DataBase;
+import Common.Driver;
 import Menu.MainMenu;
 import Menu.ShortCutBar;
 import Operation.Zalog;
@@ -12,6 +14,7 @@ import org.sikuli.script.Pattern;
 import org.sikuli.script.Region;
 
 import java.net.URISyntaxException;
+import java.sql.SQLException;
 
 public class NewZalog  extends  Zalog {
    // Zalog z;
@@ -36,7 +39,16 @@ public class NewZalog  extends  Zalog {
     public void CreateZalog() throws FindFailed, URISyntaxException {
         System.out.println("test");
         Zalog z = new Zalog();
-        z.SetDateReturn("01.01.2000");
+        z.SetDateReturn("20.06.2016");
+
+        DataBase Base = new DataBase();
+        Base.Connect();
+        try {
+            Base.Query();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
        /*z.StartZalog();
 
         z.SetKolPeriod(32);

@@ -19,6 +19,13 @@ public class Zalog extends Driver{
 
     private Region ZalogRG;
     private Pattern ZalogPT;
+    private Calendar WorkDate = new GregorianCalendar(2016,5,1);
+
+    private void SetWorkDate() {
+        WorkDate = Calendar.getInstance();
+
+    }
+
 
     public Zalog() throws FindFailed, URISyntaxException {
         //username = new Pattern(path("ShortCutBar"));
@@ -81,6 +88,11 @@ public class Zalog extends Driver{
         }
     }
 
+    public void SelectFIO() {
+
+
+    }
+
     public void SetKolPeriod(int n){
         Region KolPeriod = null;
         int i = 0;
@@ -115,81 +127,24 @@ public class Zalog extends Driver{
         }
     }
 
-    public void SetDateReturn(String DateReturn)  {
+    public void SetDateReturn(String StrDateReturn)  {
         int n;
-        if (DateReturn == null) DateReturn = "currentdate";
+        if (StrDateReturn == null) StrDateReturn = "currentdate";
         n = 1; //WorkDate - DateReturn;
 
-        String str = "15.01.2016";
+        //SetWorkDate();
+        // Calendar calendar = new GregorianCalendar(2016,Calendar.FEBRUARY,28);
+        Calendar DateReturn = Calendar.getInstance();
 
-        Calendar calendar = new GregorianCalendar(2013,1,28);
-
-
-
-        System.out.println(calendar.get(calendar.DATE));
-        System.out.println(calendar.get(calendar.YEAR));
-        System.out.println(calendar.get(calendar.MONTH));
-
-
-        SimpleDateFormat sdf = new SimpleDateFormat("dd.MMM.yyyy"); //, Locale.JAPAN
-        System.out.println(sdf.format(calendar.getTime()));
-
-        //Calendar calendar1 = new GregorianCalendar(2016,4,30);
-        //Calendar calendar2 = new GregorianCalendar(2016,5,1);
-        /*calendar1.set(2016,2, 28);
-        calendar2.set(2016,3, 1);
-*/
-  /*      long milliseconds1 = calendar1.getTimeInMillis();
-        long milliseconds2 = calendar2.getTimeInMillis();
-        long diff = milliseconds2 - milliseconds1;
-        long diffSeconds = diff / 1000;
-        long diffMinutes = diff / (60 * 1000);
-        long diffHours = diff / (60 * 60 * 1000);
-        long diffDays = diff / (24 * 60 * 60 * 1000);
-
-        System.out.println("asdasdasd = " + diffDays);
-
-*/
-       /* Calendar calendar1 = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
-        Calendar calendar2 = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
-
-        calendar1.set(2016,2, 28);
-        calendar2.set(2016,3, 1);
-
-        Calendar date = (Calendar) calendar1.clone();
-        long daysBetween = 0;
-        while (date.before(calendar2)) {
-            date.add(Calendar.DAY_OF_MONTH, 1);
-            daysBetween++;
+        SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy"); //, Locale.JAPAN
+        try {
+            DateReturn.setTime(sdf.parse(StrDateReturn));
+        } catch (ParseException e) {
+            e.printStackTrace();
         }
-        System.out.println(" qwqw = "+daysBetween);*/
 
-        final Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
-        cal.setTimeInMillis(0);
-        System.out.println(cal.getTimeZone());
-
-        cal.set(Calendar.YEAR, 2016);
-        cal.set(Calendar.MONTH, 2);
-        cal.set(Calendar.DAY_OF_MONTH, 29);
-        cal.set(Calendar.HOUR, 0);
-        cal.set(Calendar.MINUTE, 0);
-        cal.set(Calendar.SECOND, 0);
-        final Date startDate = cal.getTime();
-
-        cal.set(Calendar.YEAR, 2016);
-        cal.set(Calendar.MONTH, 3);
-        cal.set(Calendar.DAY_OF_MONTH, 1);
-        cal.set(Calendar.HOUR, 0);
-        cal.set(Calendar.MINUTE, 0);
-        cal.set(Calendar.SECOND, 0);
-        final Date endDate = cal.getTime();
-
-        System.out.println((endDate.getTime() - startDate.getTime())/(1000*60*60*24) /* % (1000l * 60l * 60l * 24l)*/);
-
-
-
-
-
+        n = (int)((DateReturn.getTimeInMillis() - WorkDate.getTimeInMillis())/(1000*60*60*24));
+        System.out.println(n);
 
         // SetKolPeriod(n);
 
