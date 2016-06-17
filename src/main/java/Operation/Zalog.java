@@ -1,11 +1,17 @@
 package Operation;
 
+import Common.Common;
+import Common.DataBase;
 import Common.Driver;
 
+import Common.MyRegion;
 import org.sikuli.script.*;
 import org.sikuli.script.Observer;
 
+import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
+import java.nio.charset.Charset;
+import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -26,7 +32,25 @@ public class Zalog extends Driver{
 
     }
 
+    public void SetDiscountCardNumber(){
+        Region CardNumberRG = null;
+        try {
+            CardNumberRG = ZalogRG.find(new Pattern(path("Zalog\\E_DiscountCardNumber")));
+            CardNumberRG.click();
+            Common d = new Common();
+            //CardNumberRG.type(d.toEnglish("Андрієць О"));
+            CardNumberRG.type(",euftyrj");
 
+        } catch (FindFailed findFailed) {
+            findFailed.printStackTrace();
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
+        ZalogRG.highlight(2);
+
+
+
+    }
     public Zalog() throws FindFailed, URISyntaxException {
         //username = new Pattern(path("ShortCutBar"));
         //password = new Pattern(DataProperties.path("loginPassword.png"));
@@ -88,9 +112,54 @@ public class Zalog extends Driver{
         }
     }
 
-    public void SelectFIO() {
+    public void SetFIO() {
+        Region fioRG = null;
+        try {
+            fioRG = ZalogRG.find(new Pattern(path("Zalog\\E_FIO")));
 
+            fioRG = fioRG.right(100);
+            fioRG.click();
 
+            DataBase Base = new DataBase();
+            Base.Connect();
+
+            List<String[]> rs = new ArrayList<>();
+
+            System.out.println("select first 1 ID, \"Fam\"||\" \"||\"Imja\"||\" \"||\"Otc\" from \"PrFizLicList\"(null, 451) order by \"Fam\",\"Imja\",\"Otc\"");
+            rs = Base.Query("select first 1 ID, \"Fam\"||\' \'||\"Imja\"||\' \'||\"Otc\" from \"PrFizLicList\"(null, 451) order by \"Fam\",\"Imja\",\"Otc\"");
+
+            //Common с = new Common();
+            fioRG.type(Common.toEnglish(rs.get(0)[1]));
+            fioRG.type(Key.ENTER);
+        } catch (FindFailed findFailed) {
+            findFailed.printStackTrace();
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void SetFIO(String like) {
+        Region fioRG = null;
+        try {
+            fioRG = ZalogRG.find(new Pattern(path("Zalog\\E_FIO")));
+
+            fioRG = fioRG.right(100);
+            fioRG.click();
+
+            DataBase Base = new DataBase();
+            Base.Connect();
+
+            List<String[]> rs = new ArrayList<>();
+
+            rs = Base.Query("select first 1 ID, \"Fam\"||\' \'||\"Imja\"||\' \'||\"Otc\" from \"PrFizLicList\"(null, 451) where \"Fam\" like '"+like+"%' order by \"Fam\",\"Imja\",\"Otc\"");
+
+            fioRG.type(Common.toEnglish(rs.get(0)[1]));
+            fioRG.type(Key.ENTER);
+        } catch (FindFailed findFailed) {
+            findFailed.printStackTrace();
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
     }
 
     public void SetKolPeriod(int n){

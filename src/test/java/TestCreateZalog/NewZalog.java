@@ -39,17 +39,28 @@ public class NewZalog  extends  Zalog {
     public void CreateZalog() throws FindFailed, URISyntaxException {
         System.out.println("test");
         Zalog z = new Zalog();
-        z.SetDateReturn("20.06.2016");
+        z.StartZalog();
+        //z.SetDiscountCardNumber();
 
-        DataBase Base = new DataBase();
+        // Common Common = new Common();
+     //    System.out.println(Common.toEnglish("Андрієць Олена Василівна"));
+
+
+
+       // z.SetDateReturn("20.06.2016");
+
+         z.SetFIO("Бу");
+
+  /*      DataBase Base = new DataBase();
         Base.Connect();
+        String query = "select ID, \"Fam\", \"Imja\", \"Otc\" from \"PrFizLicList\"(null, 451) order by \"Fam\",\"Imja\",\"Otc\"";
         try {
-            Base.Query();
+            Base.Query(query);
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
-       /*z.StartZalog();
+*/
+       /*
 
         z.SetKolPeriod(32);
         z.ClickAddMainoButton();
@@ -61,7 +72,7 @@ public class NewZalog  extends  Zalog {
         //menu.subSessia(0).click();
 
 
-       // Common Common = new Common();
+
         //Common.ChangeWorkDate("01.02.2016");
 
         //StartZalog();
