@@ -3,20 +3,15 @@ package Operation;
 import Common.Common;
 import Common.DataBase;
 import Common.Driver;
+import static Common.Common.WorkDate;
 
-import Common.MyRegion;
 import org.sikuli.script.*;
 import org.sikuli.script.Observer;
 
-import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
-import java.nio.charset.Charset;
-import java.sql.SQLException;
-import java.text.DateFormat;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 
@@ -25,12 +20,6 @@ public class Zalog extends Driver{
 
     private Region ZalogRG;
     private Pattern ZalogPT;
-    private Calendar WorkDate = new GregorianCalendar(2016,5,1);
-
-    private void SetWorkDate() {
-        WorkDate = Calendar.getInstance();
-
-    }
 
     public void SetDiscountCardNumber(){
         Region CardNumberRG = null;
@@ -43,19 +32,24 @@ public class Zalog extends Driver{
 
         } catch (FindFailed findFailed) {
             findFailed.printStackTrace();
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
         }
         ZalogRG.highlight(2);
-
-
-
     }
+    public void SetDiscountCardNumber(String CardNumber){
+        Region CardNumberRG;
+        try {
+            CardNumberRG = ZalogRG.find(new Pattern(path("Zalog\\E_DiscountCardNumber")));
+            CardNumberRG.click();
+            CardNumberRG.type(CardNumber);
+        } catch (FindFailed findFailed) {
+            findFailed.printStackTrace();
+        }
+        ZalogRG.highlight(2);
+    }
+
     public Zalog() throws FindFailed, URISyntaxException {
         //username = new Pattern(path("ShortCutBar"));
-        //password = new Pattern(DataProperties.path("loginPassword.png"));
-        //loginButton = new Pattern(DataProperties.path("loginSubmiButton.png"));
-        System.out.println("tesdsfdsfsdfsdfsdfsdfsdfsdfsdfsft");
+
         ZalogPT = new Pattern(path("Zalog\\f_Zalog"));
        /* errorMessage = new Pattern(DataProperties.path("loginFailedLoginMessage.png"));
         */
@@ -91,7 +85,6 @@ public class Zalog extends Driver{
     }
 
 
-
     public void StartZalog() {
         try {
 
@@ -112,8 +105,8 @@ public class Zalog extends Driver{
         }
     }
 
-    public void SetFIO() {
-        Region fioRG = null;
+    public void SelectFIO() {
+        Region fioRG;
         try {
             fioRG = ZalogRG.find(new Pattern(path("Zalog\\E_FIO")));
 
@@ -123,23 +116,21 @@ public class Zalog extends Driver{
             DataBase Base = new DataBase();
             Base.Connect();
 
-            List<String[]> rs = new ArrayList<>();
+            List<String[]> rs;// = new ArrayList<>();
 
             System.out.println("select first 1 ID, \"Fam\"||\" \"||\"Imja\"||\" \"||\"Otc\" from \"PrFizLicList\"(null, 451) order by \"Fam\",\"Imja\",\"Otc\"");
             rs = Base.Query("select first 1 ID, \"Fam\"||\' \'||\"Imja\"||\' \'||\"Otc\" from \"PrFizLicList\"(null, 451) order by \"Fam\",\"Imja\",\"Otc\"");
-
+            Base.Closed();
             //Common с = new Common();
             fioRG.type(Common.toEnglish(rs.get(0)[1]));
             fioRG.type(Key.ENTER);
         } catch (FindFailed findFailed) {
             findFailed.printStackTrace();
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
         }
     }
 
-    public void SetFIO(String like) {
-        Region fioRG = null;
+    public void SelectFIO(String like) {
+        Region fioRG;
         try {
             fioRG = ZalogRG.find(new Pattern(path("Zalog\\E_FIO")));
 
@@ -149,22 +140,20 @@ public class Zalog extends Driver{
             DataBase Base = new DataBase();
             Base.Connect();
 
-            List<String[]> rs = new ArrayList<>();
+            List<String[]> rs;// = new ArrayList<>();
 
             rs = Base.Query("select first 1 ID, \"Fam\"||\' \'||\"Imja\"||\' \'||\"Otc\" from \"PrFizLicList\"(null, 451) where \"Fam\" like '"+like+"%' order by \"Fam\",\"Imja\",\"Otc\"");
-
+            Base.Closed();
             fioRG.type(Common.toEnglish(rs.get(0)[1]));
             fioRG.type(Key.ENTER);
         } catch (FindFailed findFailed) {
             findFailed.printStackTrace();
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
         }
     }
 
     public void SetKolPeriod(int n){
-        Region KolPeriod = null;
-        int i = 0;
+        Region KolPeriod;
+        int i;
 
         try {
             KolPeriod = ZalogRG.find(new Pattern(path("Zalog\\E_KolPeriod")));
@@ -191,15 +180,12 @@ public class Zalog extends Driver{
                 KolPeriod.type(Key.NUM_LOCK);
         } catch (FindFailed findFailed) {
             findFailed.printStackTrace();
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
         }
     }
 
     public void SetDateReturn(String StrDateReturn)  {
         int n;
         if (StrDateReturn == null) StrDateReturn = "currentdate";
-        n = 1; //WorkDate - DateReturn;
 
         //SetWorkDate();
         // Calendar calendar = new GregorianCalendar(2016,Calendar.FEBRUARY,28);
@@ -224,8 +210,6 @@ public class Zalog extends Driver{
             ZalogRG.find(new Pattern(path("Zalog\\B_Add"))).click();
         } catch (FindFailed findFailed) {
             findFailed.printStackTrace();
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
         }
     }
 
@@ -240,10 +224,9 @@ public class Zalog extends Driver{
             Group.click();
         } catch (FindFailed findFailed) {
             findFailed.printStackTrace();
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
         }
     }
+
     public void SelectGroupMaino() {
         Region Group = null;
         try {
@@ -251,8 +234,6 @@ public class Zalog extends Driver{
             Group.doubleClick();
         } catch (FindFailed findFailed) {
             findFailed.printStackTrace();
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
         }
     }
 

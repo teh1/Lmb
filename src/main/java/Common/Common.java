@@ -8,11 +8,14 @@ import org.sikuli.script.Region;
 
 import java.io.CharConversionException;
 import java.net.URISyntaxException;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Map;
 
 public class Common extends Driver {
 
+    public static Calendar WorkDate = new GregorianCalendar(2016,5,1);
 
     public static String toEnglish(String RusStr){
         String str = "";
@@ -107,8 +110,6 @@ public class Common extends Driver {
             fLogin.find(new Pattern(path("Login\\b_Enter"))).click();
         } catch (FindFailed findFailed) {
             findFailed.printStackTrace();
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
         }
 
     }
@@ -136,8 +137,6 @@ public class Common extends Driver {
             WorkDate.type(Key.ENTER);
         } catch (FindFailed findFailed) {
             findFailed.printStackTrace();
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
         }
     }
 }
