@@ -14,11 +14,7 @@ public class MainMenu extends Driver{
     private Region Menu_region = null;;
 
     public MainMenu() {
-        try {
-            Menu = new Pattern(path("Menu\\Menu"));
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-        }
+        Menu = new Pattern(path("Menu\\Menu"));
     }
 
     private Region mMenu() {
@@ -37,8 +33,6 @@ public class MainMenu extends Driver{
 
         try {
             return mMenu().find(new Pattern(path("Menu\\mSessia")));
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
         } catch (FindFailed findFailed) {
             findFailed.printStackTrace();
         }
@@ -55,8 +49,6 @@ public class MainMenu extends Driver{
             return subSessiaRG.getCell(num, 0);
         } catch (FindFailed findFailed) {
             findFailed.printStackTrace();
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
         }
 
         //Menu_region.setRaster(1, 10);

@@ -5,11 +5,13 @@ import Common.DataBase;
 import Common.Driver;
 import static Common.Common.WorkDate;
 
+import org.sikuli.basics.Settings;
 import org.sikuli.script.*;
 import org.sikuli.script.Observer;
 
 import java.net.URISyntaxException;
 
+import java.security.acl.Group;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -20,6 +22,8 @@ public class Zalog extends Driver{
 
     private Region ZalogRG;
     private Pattern ZalogPT;
+    private int TalmbMaterials_ID;
+    private int TalmbAlgorithm_ID;
 
     public void SetDiscountCardNumber(){
         Region CardNumberRG = null;
@@ -72,19 +76,6 @@ public class Zalog extends Driver{
     wait(30) # another way to observe for 30 seconds
     r.stopObserver()*/
 
-
-    void changed(Observer event)  {
-       // System.out.println(event.);
-
-       /* for (Match ch : event.getChanges()) {
-            ch.highlight();
-        }
-        wait(1);*/
-
-
-    }
-
-
     public void StartZalog() {
         try {
 
@@ -110,7 +101,7 @@ public class Zalog extends Driver{
         try {
             fioRG = ZalogRG.find(new Pattern(path("Zalog\\E_FIO")));
 
-            fioRG = fioRG.right(100);
+            fioRG = fioRG.right(fioRG.getW() * 4);
             fioRG.click();
 
             DataBase Base = new DataBase();
@@ -134,7 +125,7 @@ public class Zalog extends Driver{
         try {
             fioRG = ZalogRG.find(new Pattern(path("Zalog\\E_FIO")));
 
-            fioRG = fioRG.right(100);
+            fioRG = fioRG.right(fioRG.getW() * 4);
             fioRG.click();
 
             DataBase Base = new DataBase();
@@ -149,6 +140,53 @@ public class Zalog extends Driver{
         } catch (FindFailed findFailed) {
             findFailed.printStackTrace();
         }
+    }
+
+    public void SelectAlgorithmKredit(String name) {
+        Region AlgorithmRG;
+
+        try {
+            Pattern a = new Pattern(path("Zalog\\E_AlgorithmKredita"));
+            AlgorithmRG = ZalogRG.find(a);
+
+            AlgorithmRG = AlgorithmRG.right(AlgorithmRG.getW()*5);
+            AlgorithmRG.click();
+
+            boolean on;
+            //выкл/вкл NumLock так как коммбинация SHIFT +HOME не работает с включенным NumLock
+            on = (Key.isLockOn('\ue03b'));
+            if(on)
+                AlgorithmRG.type(Key.NUM_LOCK);
+
+            AlgorithmRG.type(Key.HOME, Key.SHIFT);
+            AlgorithmRG.type(Key.BACKSPACE);
+
+            if(on)
+                AlgorithmRG.type(Key.NUM_LOCK);
+
+            AlgorithmRG.type(Common.toEnglish(name));
+            List<String[]> rs;
+            DataBase b = new DataBase();
+            b.Connect();
+            rs = b.Query(" select  \"TalmbAlgorithm\".id, \"TalmbAlgorithm\".\"Name\" from \"TalmbAlgorithm\" " +
+                    "      left join \"TalmbAlgorithmParam\" on \"TalmbAlgorithmParam\".\"IDTalmbAlgorithm\" = \"TalmbAlgorithm\".id " +
+                    "      where \"TalmbAlgorithmParam\".\"IsUsed\" = 1 " +
+                    "      and \"TalmbAlgorithm\".\"Name\" like '" + name + "%'");
+            b.Closed();
+            TalmbAlgorithm_ID =  rs.get(0)[0];
+
+            System.out.println("sfsfsfsdsd ========"+rs.size());
+
+
+            AlgorithmRG.type(Key.ENTER);
+
+
+
+        } catch (FindFailed findFailed) {
+            findFailed.printStackTrace();
+        }
+
+
     }
 
     public void SetKolPeriod(int n){
@@ -205,7 +243,7 @@ public class Zalog extends Driver{
 
     }
 
-    public void ClickAddMainoButton() {
+    public void AddMainoButtonClick() {
         try {
             ZalogRG.find(new Pattern(path("Zalog\\B_Add"))).click();
         } catch (FindFailed findFailed) {
@@ -214,30 +252,96 @@ public class Zalog extends Driver{
     }
 
     public void SelectGroupMaino(String str) {
-        Region Group = null;
+        Region Groups, GroupName = null;
         try {
+            Groups = getDriver().find(new Pattern(path("GroupMaino\\f_GroupMaino")));
+            Groups = Groups.below(Groups.getH() * 1);
 
             if (str.equals("Техника"))
-                Group = getDriver().find(new Pattern(path("GroupMaino\\Technics")));
-            if (str == null || str.equals("Драг.Металл"))
-                Group = getDriver().find(new Pattern(path("GroupMaino\\DragMetall")));
-            Group.click();
+                GroupName = Groups.find(new Pattern(path("GroupMaino\\Technics")));
+            if (str.equals("Драг.Металл"))
+                GroupName = Groups.find(new Pattern(path("GroupMaino\\DragMetall")));
+
+            GroupName.doubleClick();
         } catch (FindFailed findFailed) {
             findFailed.printStackTrace();
         }
     }
 
     public void SelectGroupMaino() {
-        Region Group = null;
+        Region Groups, GroupName;
+
         try {
-            Group = getDriver().find(new Pattern(path("GroupMaino\\DragMetall")));
-            Group.doubleClick();
+
+            Groups = getDriver().find(new Pattern(path("GroupMaino\\f_GroupMaino")));
+            Groups = Groups.below(Groups.getH() * 1);
+            GroupName = Groups.find(new Pattern(path("GroupMaino\\DragMetall")));
+
+            GroupName.doubleClick();
         } catch (FindFailed findFailed) {
             findFailed.printStackTrace();
         }
     }
 
-    public void SelectMaino() {
-
+    public void SelectMaino(String NameMaino) {
+        ZalogRG.type(Common.toEnglish(NameMaino));
+        ZalogRG.type(Key.ENTER);
     }
+
+    public void SelectMaterial(String Name) {
+        ZalogRG.type(Common.toEnglish(Name));
+        ZalogRG.type(Key.ENTER);
+    }
+
+    public void SelectProba(String ProbaName, String Suffix){
+        Region SelectProbaRG, ProbaNameRG;
+        try {
+            SelectProbaRG = getDriver().find(new Pattern(path("Zalog\\F_SelectProba")));
+            ProbaNameRG = SelectProbaRG.find(new Pattern(path("Zalog\\E_Proba")));
+            ProbaNameRG = ProbaNameRG.right(ProbaNameRG.getW()*2);
+            ProbaNameRG.click();
+            ProbaNameRG.type(Common.toEnglish(ProbaName));
+
+            ProbaNameRG.type(Key.TAB); //переход на суфикс
+
+            if (Suffix != null) {
+                ProbaNameRG.type(Common.toEnglish(Suffix));
+                ProbaNameRG.type(Key.ENTER);
+            }
+
+            ProbaNameRG.type(Key.ENTER); // кнопка ОК
+
+        } catch (FindFailed findFailed) {
+            findFailed.printStackTrace();
+        }
+    }
+
+    public void SetAmount(int kol){
+        Region AmountRG;
+        try {
+            AmountRG = getDriver().find(new Pattern(path("Zalog\\F_Amount")));
+            AmountRG = AmountRG.right(AmountRG.getW());
+            AmountRG.click();
+            AmountRG.type(String.valueOf(kol));
+            AmountRG.type(Key.ENTER);
+        } catch (FindFailed findFailed) {
+            findFailed.printStackTrace();
+        }
+    }
+    public void SetWeight(double weight ){
+        Region WeightRG, NtWtRG;
+        try {
+            WeightRG = getDriver().find(new Pattern(path("Zalog\\F_Weight")));
+            NtWtRG = WeightRG.find(new Pattern(path("Zalog\\E_NtWt")));
+            NtWtRG = NtWtRG.right(NtWtRG.getW());
+            NtWtRG.click();
+            NtWtRG.type(Common.toEnglish(String.valueOf(weight)));
+            NtWtRG.type(Key.ENTER);
+            NtWtRG.type(Key.ENTER);
+
+        } catch (FindFailed findFailed) {
+            findFailed.printStackTrace();
+        }
+    }
+
 }

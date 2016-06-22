@@ -1,20 +1,11 @@
 package TestCreateZalog;
 
-import Common.Common;
-import Common.DataBase;
-import Common.Driver;
-import Menu.MainMenu;
-import Menu.ShortCutBar;
 import Operation.Zalog;
 import org.junit.Before;
 import org.junit.Test;
 import org.sikuli.script.FindFailed;
-import org.sikuli.script.Match;
-import org.sikuli.script.Pattern;
-import org.sikuli.script.Region;
 
 import java.net.URISyntaxException;
-import java.sql.SQLException;
 
 public class NewZalog  extends  Zalog {
    // Zalog z;
@@ -49,7 +40,18 @@ public class NewZalog  extends  Zalog {
 
        // z.SetDateReturn("20.06.2016");
 
-         z.SetFIO("Бу");
+         z.SelectFIO("Багач");
+         z.SelectAlgorithmKredit("Класичний");
+         z.AddMainoButtonClick();
+         z.SelectGroupMaino("Драг.Металл");
+        z.SelectMaino("Запонки");
+        z.SelectMaterial("золото");
+        z.SelectProba("583","и");
+        z.SetAmount(2);
+        z.SetWeight(12.2);
+
+
+
 
   /*      DataBase Base = new DataBase();
         Base.Connect();
@@ -63,7 +65,7 @@ public class NewZalog  extends  Zalog {
        /*
 
         z.SetKolPeriod(32);
-        z.ClickAddMainoButton();
+        z.AddMainoButtonClick();
         z.SelectGroupMaino();
 */
        // MainMenu menu = new MainMenu();
