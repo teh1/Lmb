@@ -152,17 +152,7 @@ public class Zalog extends Driver{
             AlgorithmRG = AlgorithmRG.right(AlgorithmRG.getW()*5);
             AlgorithmRG.click();
 
-            boolean on;
-            //выкл/вкл NumLock так как коммбинация SHIFT +HOME не работает с включенным NumLock
-            on = (Key.isLockOn('\ue03b'));
-            if(on)
-                AlgorithmRG.type(Key.NUM_LOCK);
-
-            AlgorithmRG.type(Key.HOME, Key.SHIFT);
-            AlgorithmRG.type(Key.BACKSPACE);
-
-            if(on)
-                AlgorithmRG.type(Key.NUM_LOCK);
+            Common.ClearEdit(AlgorithmRG);
 
             AlgorithmRG.type(Common.toEnglish(name));
             List<String[]> rs;
@@ -173,14 +163,9 @@ public class Zalog extends Driver{
                     "      where \"TalmbAlgorithmParam\".\"IsUsed\" = 1 " +
                     "      and \"TalmbAlgorithm\".\"Name\" like '" + name + "%'");
             b.Closed();
-            TalmbAlgorithm_ID =  rs.get(0)[0];
-
-            System.out.println("sfsfsfsdsd ========"+rs.size());
-
+            TalmbAlgorithm_ID = Integer.parseInt(rs.get(0)[0]);
 
             AlgorithmRG.type(Key.ENTER);
-
-
 
         } catch (FindFailed findFailed) {
             findFailed.printStackTrace();
@@ -289,6 +274,10 @@ public class Zalog extends Driver{
     }
 
     public void SelectMaterial(String Name) {
+        DataBase b = new DataBase();
+        b.Connect();
+
+
         ZalogRG.type(Common.toEnglish(Name));
         ZalogRG.type(Key.ENTER);
     }
