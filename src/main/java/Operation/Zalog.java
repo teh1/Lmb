@@ -23,7 +23,8 @@ public class Zalog extends Driver{
     private Region ZalogRG;
     private Pattern ZalogPT;
     private int TalmbMaterials_ID;
-    private int TalmbAlgorithm_ID;
+    private int TalmbAlgorithm_ID = -1;
+    private int GroupMaino_ID = -1; //заглушка, это покамесь не айди
 
     public void SetDiscountCardNumber(){
         Region CardNumberRG = null;
@@ -75,6 +76,39 @@ public class Zalog extends Driver{
 
     wait(30) # another way to observe for 30 seconds
     r.stopObserver()*/
+//Observe
+    public void stop(){
+        System.out.println("1111111111111111");
+        ZalogRG.stopObserver();
+    }
+
+
+    public void test(){
+        ZalogRG.onChange(new ObserverCallBack(){
+            @Override
+            public void changed(ObserveEvent event){
+                System.out.println("qqqqqqqqqqqq = "+event.getType());
+                List<Match> rrr = event.getChanges();
+                rrr.get(0).highlight(1);
+               // event.getRegion().highlight(1);
+                //ZalogRG.wait(2.0);
+            }
+        });
+        ZalogRG.observe(60);//observeInBackground(60);
+
+       /* ObserverCallBack event = new ObserverCallBack(){
+            @Override
+            public void changed(ObserveEvent e) {
+                System.out.println("Video playing");
+                ZalogRG.wait(1.0);
+            }
+        };
+
+        ZalogRG.onChange(50, event); // When there is min 50 pixel change in the region, call event
+        ZalogRG.observe(); // Observe foreve
+*/
+    }
+
 
     public void StartZalog() {
         try {
@@ -122,16 +156,17 @@ public class Zalog extends Driver{
 
     public void SelectFIO(String like) {
         Region fioRG;
+        DataBase Base;
         try {
             fioRG = ZalogRG.find(new Pattern(path("Zalog\\E_FIO")));
 
             fioRG = fioRG.right(fioRG.getW() * 4);
             fioRG.click();
 
-            DataBase Base = new DataBase();
+            Base = new DataBase();
             Base.Connect();
 
-            List<String[]> rs;// = new ArrayList<>();
+            List<String[]> rs;
 
             rs = Base.Query("select first 1 ID, \"Fam\"||\' \'||\"Imja\"||\' \'||\"Otc\" from \"PrFizLicList\"(null, 451) where \"Fam\" like '"+like+"%' order by \"Fam\",\"Imja\",\"Otc\"");
             Base.Closed();
@@ -143,7 +178,9 @@ public class Zalog extends Driver{
     }
 
     public void SelectAlgorithmKredit(String name) {
+        if (TalmbAlgorithm_ID != -1) return;
         Region AlgorithmRG;
+        List<String[]> rs;
 
         try {
             Pattern a = new Pattern(path("Zalog\\E_AlgorithmKredita"));
@@ -154,8 +191,6 @@ public class Zalog extends Driver{
 
             Common.ClearEdit(AlgorithmRG);
 
-            AlgorithmRG.type(Common.toEnglish(name));
-            List<String[]> rs;
             DataBase b = new DataBase();
             b.Connect();
             rs = b.Query(" select  \"TalmbAlgorithm\".id, \"TalmbAlgorithm\".\"Name\" from \"TalmbAlgorithm\" " +
@@ -163,7 +198,10 @@ public class Zalog extends Driver{
                     "      where \"TalmbAlgorithmParam\".\"IsUsed\" = 1 " +
                     "      and \"TalmbAlgorithm\".\"Name\" like '" + name + "%'");
             b.Closed();
-            TalmbAlgorithm_ID = Integer.parseInt(rs.get(0)[0]);
+            if (rs.size() == 1) {
+                TalmbAlgorithm_ID = Integer.parseInt(rs.get(0)[0]);
+                AlgorithmRG.type(Common.toEnglish(rs.get(0)[1]));
+            }
 
             AlgorithmRG.type(Key.ENTER);
 
@@ -238,15 +276,19 @@ public class Zalog extends Driver{
 
     public void SelectGroupMaino(String str) {
         Region Groups, GroupName = null;
+        if (GroupMaino_ID != -1) return;
         try {
             Groups = getDriver().find(new Pattern(path("GroupMaino\\f_GroupMaino")));
             Groups = Groups.below(Groups.getH() * 1);
 
-            if (str.equals("Техника"))
+            if (str.equals("Техника")) {
                 GroupName = Groups.find(new Pattern(path("GroupMaino\\Technics")));
-            if (str.equals("Драг.Металл"))
+                GroupMaino_ID = 0;
+            }
+            if (str.equals("Драг.Металл")) {
                 GroupName = Groups.find(new Pattern(path("GroupMaino\\DragMetall")));
-
+                GroupMaino_ID = 1;
+            }
             GroupName.doubleClick();
         } catch (FindFailed findFailed) {
             findFailed.printStackTrace();
@@ -255,13 +297,13 @@ public class Zalog extends Driver{
 
     public void SelectGroupMaino() {
         Region Groups, GroupName;
-
+        if (GroupMaino_ID != -1) return;
         try {
 
             Groups = getDriver().find(new Pattern(path("GroupMaino\\f_GroupMaino")));
             Groups = Groups.below(Groups.getH() * 1);
             GroupName = Groups.find(new Pattern(path("GroupMaino\\DragMetall")));
-
+            GroupMaino_ID = 1;
             GroupName.doubleClick();
         } catch (FindFailed findFailed) {
             findFailed.printStackTrace();
@@ -274,8 +316,20 @@ public class Zalog extends Driver{
     }
 
     public void SelectMaterial(String Name) {
-        DataBase b = new DataBase();
+        List<String[]> rs;
+        DataBase b;
+
+        Name = Name.toLowerCase();
+        b = new DataBase();
         b.Connect();
+
+        rs = b.Query("select \"TalmbMaterials\".id, \"TalmbMaterials\".\"MaterialName\" " +
+                     "from \"TalmbMaterials\" " +
+                     "where " +
+                     "lower(\"TalmbMaterials\".\"MaterialName\") like '"+Name+"%'");
+        b.Closed();
+
+        TalmbMaterials_ID = Integer.parseInt(rs.get(0)[0]);
 
 
         ZalogRG.type(Common.toEnglish(Name));
@@ -284,7 +338,21 @@ public class Zalog extends Driver{
 
     public void SelectProba(String ProbaName, String Suffix){
         Region SelectProbaRG, ProbaNameRG;
+        List<String[]> rs;
+        DataBase b;
+        String likeSuffix = "";
         try {
+            if (Suffix!= "") likeSuffix = "and \"Suffix\" like '"+Suffix+"%'";
+
+            b = new DataBase();
+            b.Connect();
+            rs = b.Query("select distinct \"ProbeName\", \"Suffix\" from \"ViADlmbMaterialPrice\"" +
+                            " where \"TalmbMaterials_ID\"="+TalmbMaterials_ID+
+                            " and \"IDTalmbAlgorithm\"="+TalmbAlgorithm_ID+
+                            " and \"ProbeName\" like '"+ProbaName+"%' "+likeSuffix);
+            b.Closed();
+            System.out.println("asdsadsaasd=========="+rs.size());
+
             SelectProbaRG = getDriver().find(new Pattern(path("Zalog\\F_SelectProba")));
             ProbaNameRG = SelectProbaRG.find(new Pattern(path("Zalog\\E_Proba")));
             ProbaNameRG = ProbaNameRG.right(ProbaNameRG.getW()*2);
@@ -293,7 +361,7 @@ public class Zalog extends Driver{
 
             ProbaNameRG.type(Key.TAB); //переход на суфикс
 
-            if (Suffix != null) {
+            if (Suffix != "") {
                 ProbaNameRG.type(Common.toEnglish(Suffix));
                 ProbaNameRG.type(Key.ENTER);
             }
@@ -309,6 +377,7 @@ public class Zalog extends Driver{
         Region AmountRG;
         try {
             AmountRG = getDriver().find(new Pattern(path("Zalog\\F_Amount")));
+            AmountRG = AmountRG.find(new Pattern(path("Zalog\\E_Amount")));
             AmountRG = AmountRG.right(AmountRG.getW());
             AmountRG.click();
             AmountRG.type(String.valueOf(kol));
@@ -317,6 +386,7 @@ public class Zalog extends Driver{
             findFailed.printStackTrace();
         }
     }
+
     public void SetWeight(double weight ){
         Region WeightRG, NtWtRG;
         try {

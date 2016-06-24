@@ -40,15 +40,17 @@ public class NewZalog  extends  Zalog {
 
        // z.SetDateReturn("20.06.2016");
 
-         z.SelectFIO("Багач");
-         z.SelectAlgorithmKredit("Класичний");
-         z.AddMainoButtonClick();
-         z.SelectGroupMaino("Драг.Металл");
+        /* z.SelectFIO("Багач");
+        z.SelectAlgorithmKredit("Класичний");
+        z.AddMainoButtonClick();
+        z.SelectGroupMaino("Драг.Металл");
         z.SelectMaino("Запонки");
         z.SelectMaterial("золото");
-        z.SelectProba("583","и");
+        z.SelectProba("583","");
         z.SetAmount(2);
-        z.SetWeight(12.2);
+        z.SetWeight(12.2);*/
+        z.test();
+        z.stop();
 
 
 
