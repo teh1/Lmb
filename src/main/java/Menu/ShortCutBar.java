@@ -20,7 +20,7 @@ public class ShortCutBar extends  Driver{
 
     }
 
-    public ShortCutBar Zalog() throws FindFailed, URISyntaxException {
+    public ShortCutBar ChoiceZalog() throws FindFailed, URISyntaxException {
 
         Bar = new Pattern(path("ShortCutBar\\ShortCutBar"));
         ZalogButton = new Pattern(path("ShortCutBar\\ZalogButton"));

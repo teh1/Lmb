@@ -56,6 +56,7 @@ public class Zalog extends Driver{
         //username = new Pattern(path("ShortCutBar"));
 
         ZalogPT = new Pattern(path("Zalog\\f_Zalog"));
+
        /* errorMessage = new Pattern(DataProperties.path("loginFailedLoginMessage.png"));
         */
     }
@@ -113,8 +114,18 @@ public class Zalog extends Driver{
     public void StartZalog() {
         try {
 
+            Region HeadZalogRG;
+            HeadZalogRG =getDriver().wait((new Pattern(path("Zalog\\F_HeadZalog"))).similar((float) 0.7),20);
+            HeadZalogRG = HeadZalogRG.find(new Pattern(path("Zalog\\T_TitleZalog")));
+            HeadZalogRG.hover();
+            HeadZalogRG.mouseDown(Button.LEFT);
+            HeadZalogRG.mouseMove(0,0);
+            HeadZalogRG.mouseUp(Button.LEFT);
 
-            ZalogRG = getDriver().wait(ZalogPT.similar((float) 0.7),20);
+
+
+
+            ZalogRG = getDriver().wait(ZalogPT.similar((float) 0.7),5);
             ZalogRG.highlight(2);
 
             //changed();
@@ -266,7 +277,7 @@ public class Zalog extends Driver{
 
     }
 
-    public void AddMainoButtonClick() {
+    public void AddMaino() {
         try {
             ZalogRG.find(new Pattern(path("Zalog\\B_Add"))).click();
         } catch (FindFailed findFailed) {

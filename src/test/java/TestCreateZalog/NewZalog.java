@@ -1,6 +1,7 @@
 package TestCreateZalog;
 
 import Operation.Zalog;
+import Menu.ShortCutBar;
 import org.junit.Before;
 import org.junit.Test;
 import org.sikuli.script.FindFailed;
@@ -16,8 +17,9 @@ public class NewZalog  extends  Zalog {
     @Before
     public void setUp() throws InterruptedException, FindFailed, URISyntaxException {
         System.out.println("lol");
-        //ShortCutBar bar = new ShortCutBar();
-        //bar.Zalog();
+        ShortCutBar bar;
+        bar = new ShortCutBar();
+        bar. ChoiceZalog();
 
 //		openSpotify();
       //          app = run();
@@ -40,17 +42,27 @@ public class NewZalog  extends  Zalog {
 
        // z.SetDateReturn("20.06.2016");
 
-        /* z.SelectFIO("Багач");
+      /*   z.SelectFIO("Бала");
         z.SelectAlgorithmKredit("Класичний");
-        z.AddMainoButtonClick();
+        z.AddMaino();
         z.SelectGroupMaino("Драг.Металл");
         z.SelectMaino("Запонки");
         z.SelectMaterial("золото");
         z.SelectProba("583","");
         z.SetAmount(2);
+        z.SetWeight(12.2);
+
+
+        z.AddMaino();
+        z.SelectMaino("Запонки");
+        z.SelectMaterial("золото");
+        z.SelectProba("583","");
+        z.SetAmount(2);
         z.SetWeight(12.2);*/
-        z.test();
-        z.stop();
+
+
+      //  z.test();
+      //  z.stop();
 
 
 
@@ -67,7 +79,7 @@ public class NewZalog  extends  Zalog {
        /*
 
         z.SetKolPeriod(32);
-        z.AddMainoButtonClick();
+        z.AddMaino();
         z.SelectGroupMaino();
 */
        // MainMenu menu = new MainMenu();
@@ -84,6 +96,7 @@ public class NewZalog  extends  Zalog {
 
 
         // SelectFizLic("Akulova");
+
        // StartAddProduct();
        // SelectGroup();
        // SelectMetall();
