@@ -7,15 +7,23 @@ import static Common.Common.WorkDate;
 
 import org.sikuli.basics.Settings;
 import org.sikuli.script.*;
+import org.sikuli.script.Button;
 import org.sikuli.script.Observer;
 
+import java.awt.*;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.Transferable;
+import java.awt.datatransfer.UnsupportedFlavorException;
+import java.io.IOException;
 import java.net.URISyntaxException;
 
 import java.security.acl.Group;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
-
+import java.util.List;
+import java.util.Random;
 
 public class Zalog extends Driver{
     //private final float SEC = 0.5f;
@@ -53,36 +61,32 @@ public class Zalog extends Driver{
     }
 
     public Zalog() throws FindFailed, URISyntaxException {
-        //username = new Pattern(path("ShortCutBar"));
-
         ZalogPT = new Pattern(path("Zalog\\f_Zalog"));
-
-       /* errorMessage = new Pattern(DataProperties.path("loginFailedLoginMessage.png"));
-        */
     }
 
-/*
-    def changed(event):
-    print "something changed in ", event.region
-    for ch in event.getChanges():
-            ch.highlight() # highlight all changes
-                                           wait(1)
-    for ch in event.getChanges():
-            ch.highlight() # turn off the highlights
+    public void Init(){
+        try {
 
-    r = selectRegion("select a region to observe")
-    # any change in r larger than 50 pixels would trigger the changed function
-    r.onChange(50, changed)
-            r.observe(background=True)
+            Region HeadZalogRG;
+            HeadZalogRG =getDriver().wait((new Pattern(path("Zalog\\F_HeadZalog"))).similar((float) 0.7),20);
+            HeadZalogRG = HeadZalogRG.find(new Pattern(path("Zalog\\T_TitleZalog")));
+            HeadZalogRG.hover();
+            HeadZalogRG.mouseDown(Button.LEFT);
+            HeadZalogRG.mouseMove(-1*HeadZalogRG.getX()+17,-1*HeadZalogRG.getY()+90);
+            HeadZalogRG.mouseUp(Button.LEFT);
 
-    wait(30) # another way to observe for 30 seconds
-    r.stopObserver()*/
+            ZalogRG = getDriver().wait(ZalogPT.similar((float) 0.7),5);
+
+        } catch (FindFailed findFailed) {
+            findFailed.printStackTrace();
+        }
+    }
+
 //Observe
     public void stop(){
         System.out.println("1111111111111111");
         ZalogRG.stopObserver();
     }
-
 
     public void test(){
         ZalogRG.onChange(new ObserverCallBack(){
@@ -110,37 +114,6 @@ public class Zalog extends Driver{
 */
     }
 
-
-    public void StartZalog() {
-        try {
-
-            Region HeadZalogRG;
-            HeadZalogRG =getDriver().wait((new Pattern(path("Zalog\\F_HeadZalog"))).similar((float) 0.7),20);
-            HeadZalogRG = HeadZalogRG.find(new Pattern(path("Zalog\\T_TitleZalog")));
-            HeadZalogRG.hover();
-            HeadZalogRG.mouseDown(Button.LEFT);
-            HeadZalogRG.mouseMove(0,0);
-            HeadZalogRG.mouseUp(Button.LEFT);
-
-
-
-
-            ZalogRG = getDriver().wait(ZalogPT.similar((float) 0.7),5);
-            ZalogRG.highlight(2);
-
-            //changed();
-
-         //   ZalogForm.onChange(changed);
-            //ZalogForm.observe;
-            //wait(30);
-            ZalogRG.stopObserver();
-
-            //System.out.println(ZalogForm.onChange());
-        } catch (FindFailed findFailed) {
-            findFailed.printStackTrace();
-        }
-    }
-
     public void SelectFIO() {
         Region fioRG;
         try {
@@ -152,13 +125,13 @@ public class Zalog extends Driver{
             DataBase Base = new DataBase();
             Base.Connect();
 
-            List<String[]> rs;// = new ArrayList<>();
+            List<String[]> rs;
 
-            System.out.println("select first 1 ID, \"Fam\"||\" \"||\"Imja\"||\" \"||\"Otc\" from \"PrFizLicList\"(null, 451) order by \"Fam\",\"Imja\",\"Otc\"");
-            rs = Base.Query("select first 1 ID, \"Fam\"||\' \'||\"Imja\"||\' \'||\"Otc\" from \"PrFizLicList\"(null, 451) order by \"Fam\",\"Imja\",\"Otc\"");
+            rs = Base.Query("select ID, \"Fam\"||\' \'||\"Imja\"||\' \'||\"Otc\" from \"PrFizLicList\"(null, 451) order by \"Fam\",\"Imja\",\"Otc\"");
             Base.Closed();
             //Common с = new Common();
-            fioRG.type(Common.toEnglish(rs.get(0)[1]));
+            Random random = new Random();
+            fioRG.type(Common.toEnglish(rs.get(random.nextInt(rs.size()))[1]));
             fioRG.type(Key.ENTER);
         } catch (FindFailed findFailed) {
             findFailed.printStackTrace();
@@ -409,6 +382,56 @@ public class Zalog extends Driver{
             NtWtRG.type(Key.ENTER);
             NtWtRG.type(Key.ENTER);
 
+        } catch (FindFailed findFailed) {
+            findFailed.printStackTrace();
+        }
+    }
+
+    public double GetSummPercent(){
+        Region SummPercentRG;
+        try {
+            SummPercentRG = ZalogRG.find(new Pattern(path("Zalog\\E_PercentSumm")));
+           // SummPercentRG = SummPercentRG.right(SummPercentRG.getW()+2);
+           //SummPercentRG.highlight(1);
+            SummPercentRG.click();
+            Common.CopyEdit(SummPercentRG);
+            Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+            Transferable contents = clipboard.getContents(null);
+
+            DataFlavor flavor = DataFlavor.stringFlavor;
+
+            if (contents.isDataFlavorSupported(flavor)) {
+                try {
+                    String SummText = (String) (contents.getTransferData(flavor)) ;
+                    return Float.parseFloat(SummText);
+
+                } catch (UnsupportedFlavorException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        } catch (FindFailed findFailed) {
+            findFailed.printStackTrace();
+        }
+        return -1.0;
+    }
+
+    public void SaveZalog() {
+        Region ButtonSaveRG;
+        try {
+            ButtonSaveRG = ZalogRG.find(new Pattern(path("Zalog\\B_Save")));
+            ButtonSaveRG.click();
+        } catch (FindFailed findFailed) {
+            findFailed.printStackTrace();
+        }
+    }
+
+    public void CloseZalog() {
+        Region ButtonCloseRG;
+        try {
+            ButtonCloseRG = ZalogRG.find(new Pattern(path("Zalog\\B_Closed")));
+            ButtonCloseRG.click();
         } catch (FindFailed findFailed) {
             findFailed.printStackTrace();
         }

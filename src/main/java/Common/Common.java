@@ -153,4 +153,18 @@ public class Common extends Driver {
         if(on)
             Edit.type(Key.NUM_LOCK);
     }
+    public static void CopyEdit(Region Edit){
+        boolean on;
+        //выкл/вкл NumLock так как коммбинация SHIFT +HOME не работает с включенным NumLock
+        on = (Key.isLockOn('\ue03b'));
+        if(on)
+            Edit.type(Key.NUM_LOCK);
+
+        Edit.type(Key.HOME, Key.SHIFT);
+        Edit.type("c", Key.CTRL);
+
+        if(on)
+            Edit.type(Key.NUM_LOCK);
+    }
+
 }

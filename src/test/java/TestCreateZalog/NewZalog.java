@@ -2,6 +2,8 @@ package TestCreateZalog;
 
 import Operation.Zalog;
 import Menu.ShortCutBar;
+import org.junit.Assert;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.sikuli.script.FindFailed;
@@ -19,68 +21,60 @@ public class NewZalog  extends  Zalog {
         System.out.println("lol");
         ShortCutBar bar;
         bar = new ShortCutBar();
-        bar. ChoiceZalog();
+        bar.ChoiceZalog();
 
-//		openSpotify();
-      //          app = run();
-
+      //openSpotify();
+      //app = run();
     }
-    //
+
 
 
     @Test
     public void CreateZalog() throws FindFailed, URISyntaxException {
         System.out.println("test");
-        Zalog z = new Zalog();
-        z.StartZalog();
-        //z.SetDiscountCardNumber();
+        Zalog Z = new Zalog();
+        Z.Init();
+        //Z.SetDiscountCardNumber();
+        //Common Common = new Common();
+        //System.out.println(Common.toEnglish("Андрієць Олена Василівна"));
+        // Z.SetDateReturn("20.06.2016");
 
-        // Common Common = new Common();
-     //    System.out.println(Common.toEnglish("Андрієць Олена Василівна"));
-
-
-
-       // z.SetDateReturn("20.06.2016");
-
-      /*   z.SelectFIO("Бала");
-        z.SelectAlgorithmKredit("Класичний");
-        z.AddMaino();
-        z.SelectGroupMaino("Драг.Металл");
-        z.SelectMaino("Запонки");
-        z.SelectMaterial("золото");
-        z.SelectProba("583","");
-        z.SetAmount(2);
-        z.SetWeight(12.2);
+        //Z.SelectFIO("Бала");
+        Z.SelectFIO();
+        Z.SelectAlgorithmKredit("Класичний");
+        Z.SetKolPeriod(10);
+        Z.AddMaino();
+        Z.SelectGroupMaino("Драг.Металл");
+        Z.SelectMaino("Запонки");
+        Z.SelectMaterial("золото");
+        Z.SelectProba("583","");
+        Z.SetAmount(1);
+        Z.SetWeight(1.2);
 
 
-        z.AddMaino();
-        z.SelectMaino("Запонки");
-        z.SelectMaterial("золото");
-        z.SelectProba("583","");
-        z.SetAmount(2);
-        z.SetWeight(12.2);*/
-
-
-      //  z.test();
-      //  z.stop();
+        Z.AddMaino();
+        Z.SelectMaino("Брошка");
+        Z.SelectMaterial("золото");
+        Z.SelectProba("583","");
+        Z.SetAmount(2);
+        Z.SetWeight(1.3);
+        Assert.assertEquals(104.00,Z.GetSummPercent(),0.00001);
 
 
 
+//        Z.CloseZalog();
 
-  /*      DataBase Base = new DataBase();
-        Base.Connect();
-        String query = "select ID, \"Fam\", \"Imja\", \"Otc\" from \"PrFizLicList\"(null, 451) order by \"Fam\",\"Imja\",\"Otc\"";
-        try {
-            Base.Query(query);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-*/
-       /*
 
-        z.SetKolPeriod(32);
-        z.AddMaino();
-        z.SelectGroupMaino();
+
+
+      //  Z.test();
+      //  Z.stop();
+
+    /*
+
+        Z.SetKolPeriod(32);
+        Z.AddMaino();
+        Z.SelectGroupMaino();
 */
        // MainMenu menu = new MainMenu();
 
@@ -88,19 +82,9 @@ public class NewZalog  extends  Zalog {
         //menu.subSessia(0).click();
 
 
-
         //Common.ChangeWorkDate("01.02.2016");
 
-        //StartZalog();
 
-
-
-        // SelectFizLic("Akulova");
-
-       // StartAddProduct();
-       // SelectGroup();
-       // SelectMetall();
-       // SelelectProba("500","r");
     //return;
     }
 
