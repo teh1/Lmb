@@ -5,20 +5,11 @@ import Common.DataBase;
 import Common.Driver;
 import static Common.Common.WorkDate;
 
-import org.sikuli.basics.Settings;
 import org.sikuli.script.*;
 import org.sikuli.script.Button;
-import org.sikuli.script.Observer;
 
-import java.awt.*;
-import java.awt.datatransfer.Clipboard;
-import java.awt.datatransfer.DataFlavor;
-import java.awt.datatransfer.Transferable;
-import java.awt.datatransfer.UnsupportedFlavorException;
-import java.io.IOException;
 import java.net.URISyntaxException;
 
-import java.security.acl.Group;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -33,6 +24,7 @@ public class Zalog extends Driver{
     private int TalmbMaterials_ID;
     private int TalmbAlgorithm_ID = -1;
     private int GroupMaino_ID = -1; //заглушка, это покамесь не айди
+    private String NumberZalog;
 
     public void SetDiscountCardNumber(){
         Region CardNumberRG = null;
@@ -67,7 +59,7 @@ public class Zalog extends Driver{
     public void Init(){
         try {
 
-            Region HeadZalogRG;
+            Region HeadZalogRG, NumberZalogRG;
             HeadZalogRG =getDriver().wait((new Pattern(path("Zalog\\F_HeadZalog"))).similar((float) 0.7),20);
             HeadZalogRG = HeadZalogRG.find(new Pattern(path("Zalog\\T_TitleZalog")));
             HeadZalogRG.hover();
@@ -76,6 +68,12 @@ public class Zalog extends Driver{
             HeadZalogRG.mouseUp(Button.LEFT);
 
             ZalogRG = getDriver().wait(ZalogPT.similar((float) 0.7),5);
+
+            NumberZalogRG = ZalogRG.find(new Pattern(path("Zalog\\E_NumberZalog")));
+
+            NumberZalogRG = NumberZalogRG.right(NumberZalogRG.getW() + 30);
+            NumberZalogRG.click();
+            NumberZalog = Common.getEditValue(NumberZalogRG);
 
         } catch (FindFailed findFailed) {
             findFailed.printStackTrace();
@@ -129,6 +127,7 @@ public class Zalog extends Driver{
 
             rs = Base.Query("select ID, \"Fam\"||\' \'||\"Imja\"||\' \'||\"Otc\" from \"PrFizLicList\"(null, 451) order by \"Fam\",\"Imja\",\"Otc\"");
             Base.Closed();
+
             //Common с = new Common();
             Random random = new Random();
             fioRG.type(Common.toEnglish(rs.get(random.nextInt(rs.size()))[1]));
@@ -196,7 +195,7 @@ public class Zalog extends Driver{
 
     }
 
-    public void SetKolPeriod(int n){
+    public void setkolperiod(int n){
         Region KolPeriod;
         int i;
 
@@ -228,7 +227,7 @@ public class Zalog extends Driver{
         }
     }
 
-    public void SetDateReturn(String StrDateReturn)  {
+    public void setDateReturn(String StrDateReturn)  {
         int n;
         if (StrDateReturn == null) StrDateReturn = "currentdate";
 
@@ -246,7 +245,7 @@ public class Zalog extends Driver{
         n = (int)((DateReturn.getTimeInMillis() - WorkDate.getTimeInMillis())/(1000*60*60*24));
         System.out.println(n);
 
-        // SetKolPeriod(n);
+        // setkolperiod(n);
 
     }
 
@@ -357,7 +356,7 @@ public class Zalog extends Driver{
         }
     }
 
-    public void SetAmount(int kol){
+    public void setAmount(int kol){
         Region AmountRG;
         try {
             AmountRG = getDriver().find(new Pattern(path("Zalog\\F_Amount")));
@@ -371,7 +370,7 @@ public class Zalog extends Driver{
         }
     }
 
-    public void SetWeight(double weight ){
+    public void setWeight(double weight ){
         Region WeightRG, NtWtRG;
         try {
             WeightRG = getDriver().find(new Pattern(path("Zalog\\F_Weight")));
@@ -387,37 +386,26 @@ public class Zalog extends Driver{
         }
     }
 
-    public double GetSummPercent(){
+    public String getNumberZalog(){
+        return  NumberZalog;
+    }
+
+    public double getSummPercent(){
         Region SummPercentRG;
         try {
             SummPercentRG = ZalogRG.find(new Pattern(path("Zalog\\E_PercentSumm")));
            // SummPercentRG = SummPercentRG.right(SummPercentRG.getW()+2);
            //SummPercentRG.highlight(1);
             SummPercentRG.click();
-            Common.CopyEdit(SummPercentRG);
-            Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
-            Transferable contents = clipboard.getContents(null);
+            return Float.parseFloat(Common.getEditValue(SummPercentRG));
 
-            DataFlavor flavor = DataFlavor.stringFlavor;
-
-            if (contents.isDataFlavorSupported(flavor)) {
-                try {
-                    String SummText = (String) (contents.getTransferData(flavor)) ;
-                    return Float.parseFloat(SummText);
-
-                } catch (UnsupportedFlavorException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
         } catch (FindFailed findFailed) {
             findFailed.printStackTrace();
         }
         return -1.0;
     }
 
-    public void SaveZalog() {
+    public void saveZalog() {
         Region ButtonSaveRG;
         try {
             ButtonSaveRG = ZalogRG.find(new Pattern(path("Zalog\\B_Save")));
@@ -427,7 +415,7 @@ public class Zalog extends Driver{
         }
     }
 
-    public void CloseZalog() {
+    public void closeZalog() {
         Region ButtonCloseRG;
         try {
             ButtonCloseRG = ZalogRG.find(new Pattern(path("Zalog\\B_Closed")));

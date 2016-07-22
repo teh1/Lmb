@@ -6,7 +6,10 @@ import org.sikuli.script.Key;
 import org.sikuli.script.Pattern;
 import org.sikuli.script.Region;
 
+import java.awt.*;
+import java.awt.datatransfer.*;
 import java.io.CharConversionException;
+import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -146,14 +149,14 @@ public class Common extends Driver {
         on = (Key.isLockOn('\ue03b'));
         if(on)
             Edit.type(Key.NUM_LOCK);
-
+        Edit.type(Key.END);
         Edit.type(Key.HOME, Key.SHIFT);
         Edit.type(Key.BACKSPACE);
 
         if(on)
             Edit.type(Key.NUM_LOCK);
     }
-    public static void CopyEdit(Region Edit){
+    public static String getEditValue(Region Edit){
         boolean on;
         //выкл/вкл NumLock так как коммбинация SHIFT +HOME не работает с включенным NumLock
         on = (Key.isLockOn('\ue03b'));
@@ -165,6 +168,38 @@ public class Common extends Driver {
 
         if(on)
             Edit.type(Key.NUM_LOCK);
-    }
 
+        Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+        Transferable contents = clipboard.getContents(null);
+
+        DataFlavor flavor = DataFlavor.stringFlavor;
+        String SummText = "";
+
+        if (contents.isDataFlavorSupported(flavor)) {
+            try {
+                SummText = (String) (contents.getTransferData(flavor)) ;
+                return SummText;
+
+            } catch (UnsupportedFlavorException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return SummText;
+    }
+    public static void  setClipboardContents(String aString){
+        StringSelection stringSelection = new StringSelection(aString);
+        Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+        clipboard.setContents(stringSelection, null);
+    }
+    public static void Paste(Region Edit){
+        boolean on;
+        //выкл/вкл NumLock так как коммбинация SHIFT  не работает с включенным NumLock
+        on = (Key.isLockOn('\ue03b'));
+        if(on) Edit.type(Key.NUM_LOCK);
+        Edit.type("v", Key.CTRL);
+        if(on)
+            Edit.type(Key.NUM_LOCK);
+    }
 }

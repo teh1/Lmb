@@ -10,27 +10,24 @@ import java.net.URISyntaxException;
 
 public class ShortCutBar extends  Driver{
 
-     private Region region;
-     private Pattern Bar,ZalogButton;
+     private Region BarRG;
+     private Pattern BarPT,ZalogButtonPT, PerezalogButtonPT;
 
-    public void ShortCutBar() throws FindFailed, URISyntaxException {
-       System.out.println("lol");
-
-
-
+    public ShortCutBar() throws FindFailed, URISyntaxException {
+        //System.out.println("lol1111111111111");
+        BarPT = new Pattern(path("ShortCutBar\\ShortCutBar"));
+        BarRG = getDriver().wait(BarPT);
     }
 
     public ShortCutBar ChoiceZalog() throws FindFailed, URISyntaxException {
-
-        Bar = new Pattern(path("ShortCutBar\\ShortCutBar"));
-        ZalogButton = new Pattern(path("ShortCutBar\\ZalogButton"));
-
-        region = getDriver().wait(Bar);
-
-
-        region.find(ZalogButton).click();
-
-
+        ZalogButtonPT = new Pattern(path("ShortCutBar\\ZalogButton"));
+        BarRG.find(ZalogButtonPT).click();
         return this;
+    }
+
+    public void ChoicePerezalog() throws FindFailed, URISyntaxException {
+        PerezalogButtonPT = new Pattern(path("ShortCutBar\\PerezalogButton"));
+        BarRG.find(PerezalogButtonPT).click();
+
     }
 }

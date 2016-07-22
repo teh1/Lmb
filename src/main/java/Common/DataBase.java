@@ -17,7 +17,8 @@ public class DataBase {
             Class.forName("org.firebirdsql.jdbc.FBDriver");//.newInstance();
 
             //String strDatabasePath= "d:/Base/Lombard/22Kr/22_12.06.2016.GDB"; //добавить в комоон статик
-            String strDatabasePath="d:/Base/Lombard/51/server/test_VER12.GDB";
+            String strDatabasePath="d:\\Base\\Lombard\\22Kr\\22_12.06.2016.GDB";
+            //String strDatabasePath="d:/Base/Lombard/51/server/test_VER12.GDB";
             String strConnect = "jdbc:firebirdsql://127.0.0.1:3050/"+strDatabasePath+"?encoding=WIN1251";
 
             // driver = DriverManager.getDriver(strConnect);
