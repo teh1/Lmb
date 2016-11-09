@@ -176,14 +176,18 @@ public class Zalog extends Driver{
 
             DataBase b = new DataBase();
             b.Connect();
+            /*rs = b.Query(" select  \"TalmbAlgorithm\".id, \"TalmbAlgorithm\".\"Name\" from \"TalmbAlgorithm\" " +
+                    "      left join \"TalmbAlgorithmParam\" on \"TalmbAlgorithmParam\".\"IDTalmbAlgorithm\" = \"TalmbAlgorithm\".id " +
+                    "      where \"TalmbAlgorithmParam\".\"IsUsed\" = 1 " +
+                    "      and \"TalmbAlgorithm\".\"Name\" like '"+ name + "%'");*/
             rs = b.Query(" select  \"TalmbAlgorithm\".id, \"TalmbAlgorithm\".\"Name\" from \"TalmbAlgorithm\" " +
                     "      left join \"TalmbAlgorithmParam\" on \"TalmbAlgorithmParam\".\"IDTalmbAlgorithm\" = \"TalmbAlgorithm\".id " +
                     "      where \"TalmbAlgorithmParam\".\"IsUsed\" = 1 " +
-                    "      and \"TalmbAlgorithm\".\"Name\" like '" + name + "%'");
+                    "      and \"TalmbAlgorithm\".\"Name\" = '"+ name + "'");
             b.Closed();
-            if (rs.size() == 1) {
+            if (rs.size() >= 1) {
                 TalmbAlgorithm_ID = Integer.parseInt(rs.get(0)[0]);
-                AlgorithmRG.type(Common.toEnglish(rs.get(0)[1]));
+                AlgorithmRG.type(Common.toEnglish(rs.get(0)[1]));                
             }
 
             AlgorithmRG.type(Key.ENTER);
