@@ -41,7 +41,7 @@ public class NewZalog  extends  Zalog {
 
         //Z.SelectFIO("Бала");
         Z.SelectFIO();
-        Z.SelectAlgorithmKredit("Месяц");
+        Z.SelectAlgorithmKredit("День");
         Z.setkolperiod(10);
         Z.AddMaino();
         Z.SelectGroupMaino("Драг.Металл");
@@ -72,7 +72,8 @@ public class NewZalog  extends  Zalog {
         P.Open(Z.getNumberZalog());
         //P.Open("ам 65846");
         P.Init();
-        P.setDateReturn("23.08.2016");
+        //P.setDateReturn("23.11.2016");
+        P.setCountOfProlongation(11);
 
 
       //  Z.test();

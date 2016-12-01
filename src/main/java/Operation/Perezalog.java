@@ -3,14 +3,7 @@ package Operation;
 import Common.Common;
 import org.sikuli.script.*;
 
-import Common.Common;
-import Common.DataBase;
 import Common.Driver;
-
-import java.net.URISyntaxException;
-
-import static Common.Common.WorkDate;
-
 
 
 public class Perezalog extends Driver {
@@ -60,6 +53,24 @@ public class Perezalog extends Driver {
         InputNumberZalogRG.type(Key.TAB);
         InputNumberZalogRG.type(Common.toEnglish(InputText[1]));
         InputNumberZalogRG.type(Key.ENTER);
+    }
+
+
+    public void setCountOfProlongation(Integer count){
+        Region SumsRG, CountProlongation;
+        Common.setClipboardContents(String.valueOf(count)); // в буфер
+        try {
+            SumsRG = PerezalogRG.find(new Pattern(path("Perezalog\\F_Sums")));
+            CountProlongation = new Region(SumsRG.getTopRight().x-20, SumsRG.getTopRight().y-20, 20, 15);
+            CountProlongation.click();
+            Common.ClearEdit(CountProlongation);
+            Common.Paste(CountProlongation);
+            //CountProlongation.type(Key.ENTER);
+        } catch (FindFailed findFailed) {
+            findFailed.printStackTrace();
+        }
+        /* subSessiaRG.setRaster(2, 1);
+            return subSessiaRG.getCell(num, 0);*/
     }
 
     public void setDateReturn(String aDate){
