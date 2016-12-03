@@ -56,7 +56,7 @@ public class Perezalog extends Driver {
     }
 
 
-    public void setCountOfProlongation(Integer count){
+    public void setCountPeriods(Integer count){
         Region SumsRG, CountProlongation;
         Common.setClipboardContents(String.valueOf(count)); // в буфер
         try {
@@ -109,6 +109,26 @@ public class Perezalog extends Driver {
 
     }
 
+    public void savePerezalog() {
+        Region ButtonSaveRG;
+        try {
+            ButtonSaveRG = PerezalogRG.find(new Pattern(path("Perezalog\\B_Save")));
+            ButtonSaveRG.click();
+        } catch (FindFailed findFailed) {
+            findFailed.printStackTrace();
+        }
+    }
+
+    public void closePerezalog() {
+        Region ButtonCloseRG;
+        try {
+            ButtonCloseRG = PerezalogRG.find(new Pattern(path("Perezalog\\B_Closed")));
+            ButtonCloseRG.click();
+        } catch (FindFailed findFailed) {
+            findFailed.printStackTrace();
+        }
+    }
+
    /* public void setDateReturn(String StrDateReturn)  {
         int n;
         if (StrDateReturn == null) StrDateReturn = "currentdate";
@@ -127,30 +147,11 @@ public class Perezalog extends Driver {
         n = (int)((DateReturn.getTimeInMillis() - WorkDate.getTimeInMillis())/(1000*60*60*24));
         System.out.println(n);
 
-        // setkolperiod(n);
+        // setCountPeriod(n);
 
     }
-    public void setkolperiod(int n){
 
-    }
-    public void saveZalog() {
-        Region ButtonSaveRG;
-        try {
-            ButtonSaveRG = ZalogRG.find(new Pattern(path("Zalog\\B_Save")));
-            ButtonSaveRG.click();
-        } catch (FindFailed findFailed) {
-            findFailed.printStackTrace();
-        }
-    }
 
-    public void closeZalog() {
-        Region ButtonCloseRG;
-        try {
-            ButtonCloseRG = ZalogRG.find(new Pattern(path("Zalog\\B_Closed")));
-            ButtonCloseRG.click();
-        } catch (FindFailed findFailed) {
-            findFailed.printStackTrace();
-        }
     }*/
 
 }

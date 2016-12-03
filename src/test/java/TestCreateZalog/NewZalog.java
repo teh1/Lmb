@@ -3,9 +3,10 @@ package TestCreateZalog;
 import Operation.Perezalog;
 import Operation.Zalog;
 import Menu.ShortCutBar;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import Common.Common;
+
 import org.sikuli.script.FindFailed;
 
 import java.net.URISyntaxException;
@@ -18,10 +19,8 @@ public class NewZalog  extends  Zalog {
 
     @Before
     public void setUp() throws InterruptedException, FindFailed, URISyntaxException {
-        System.out.println("lol");
-        ShortCutBar bar;
-        bar = new ShortCutBar();
-        bar.ChoiceZalog();
+        System.out.println("Before test");
+
 
       //openSpotify();
       //app = run();
@@ -32,17 +31,28 @@ public class NewZalog  extends  Zalog {
     @Test
     public void CreateZalog() throws FindFailed, URISyntaxException {
         System.out.println("test");
+
+        Common Common = new Common();
+        Common.ChangeWorkDate("01.02.2016");
+
+        ShortCutBar bar;
+        bar = new ShortCutBar();
+        bar.ChoiceZalog();
+
         Zalog Z = new Zalog();
         Z.Init();
-        //Z.SetDiscountCardNumber();
-        //Common Common = new Common();
+
+
         //System.out.println(Common.toEnglish("Андрієць Олена Василівна"));
         // Z.setDateReturn("20.06.2016");
+
+
 
         //Z.SelectFIO("Бала");
         Z.SelectFIO();
         Z.SelectAlgorithmKredit("День");
-        Z.setkolperiod(10);
+        Z.SetDiscountCardNumber("11000003");
+        Z.setCountPeriod(10);
         Z.AddMaino();
         Z.SelectGroupMaino("Драг.Металл");
         Z.SelectMaino("Запонки");
@@ -63,8 +73,9 @@ public class NewZalog  extends  Zalog {
         Z.saveZalog();
         Z.closeZalog();
 
-        ShortCutBar bar;
-        bar = new ShortCutBar();
+        Common.ChangeWorkDate("01.03.2016");
+
+
         bar.ChoicePerezalog();
 
         Perezalog P = new Perezalog();
@@ -73,15 +84,16 @@ public class NewZalog  extends  Zalog {
         //P.Open("ам 65846");
         P.Init();
         //P.setDateReturn("23.11.2016");
-        P.setCountOfProlongation(11);
-
+        P.setCountPeriods(11);
+        P.savePerezalog();
+        P.closePerezalog();
 
       //  Z.test();
       //  Z.stop();
 
     /*
 
-        Z.setkolperiod(32);
+        Z.setCountPeriod(32);
         Z.AddMaino();
         Z.SelectGroupMaino();
 */
@@ -91,7 +103,7 @@ public class NewZalog  extends  Zalog {
         //menu.subSessia(0).click();
 
 
-        //Common.ChangeWorkDate("01.02.2016");
+
 
 
     //return;

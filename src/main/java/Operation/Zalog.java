@@ -3,6 +3,7 @@ package Operation;
 import Common.Common;
 import Common.DataBase;
 import Common.Driver;
+
 import static Common.Common.WorkDate;
 
 import org.sikuli.script.*;
@@ -16,7 +17,7 @@ import java.util.*;
 import java.util.List;
 import java.util.Random;
 
-public class Zalog extends Driver{
+public class Zalog extends Driver {
     //private final float SEC = 0.5f;
 
     private Region ZalogRG;
@@ -26,7 +27,8 @@ public class Zalog extends Driver{
     private int GroupMaino_ID = -1; //заглушка, это покамесь не айди
     private String NumberZalog;
 
-    public void SetDiscountCardNumber(){
+    public void SetDiscountCardNumber() {
+        //нужно дописать зачем не знаю. рандомная карточка что ли...
         Region CardNumberRG = null;
         try {
             CardNumberRG = ZalogRG.find(new Pattern(path("Zalog\\E_DiscountCardNumber")));
@@ -40,34 +42,39 @@ public class Zalog extends Driver{
         }
         ZalogRG.highlight(2);
     }
-    public void SetDiscountCardNumber(String CardNumber){
-        Region CardNumberRG;
+
+    public void SetDiscountCardNumber(String CardNumber) {
+        Region CardNumberRG, CardConfirmationRG;
         try {
             CardNumberRG = ZalogRG.find(new Pattern(path("Zalog\\E_DiscountCardNumber")));
+            CardNumberRG.highlight(2);
             CardNumberRG.click();
             CardNumberRG.type(CardNumber);
+            CardConfirmationRG = CardNumberRG.find(new Pattern(path("Zalog\\B_CardConfirmation")));
+            CardConfirmationRG.click();
+
         } catch (FindFailed findFailed) {
             findFailed.printStackTrace();
         }
-        ZalogRG.highlight(2);
+
     }
 
     public Zalog() throws FindFailed, URISyntaxException {
         ZalogPT = new Pattern(path("Zalog\\f_Zalog"));
     }
 
-    public void Init(){
+    public void Init() {
         try {
 
             Region HeadZalogRG, NumberZalogRG;
-            HeadZalogRG =getDriver().wait((new Pattern(path("Zalog\\F_HeadZalog"))).similar((float) 0.7),20);
+            HeadZalogRG = getDriver().wait((new Pattern(path("Zalog\\F_HeadZalog"))).similar((float) 0.7), 20);
             HeadZalogRG = HeadZalogRG.find(new Pattern(path("Zalog\\T_TitleZalog")));
             HeadZalogRG.hover();
             HeadZalogRG.mouseDown(Button.LEFT);
-            HeadZalogRG.mouseMove(-1*HeadZalogRG.getX()+17,-1*HeadZalogRG.getY()+90);
+            HeadZalogRG.mouseMove(-1 * HeadZalogRG.getX() + 17, -1 * HeadZalogRG.getY() + 90);
             HeadZalogRG.mouseUp(Button.LEFT);
 
-            ZalogRG = getDriver().wait(ZalogPT.similar((float) 0.7),5);
+            ZalogRG = getDriver().wait(ZalogPT.similar((float) 0.7), 5);
 
             NumberZalogRG = ZalogRG.find(new Pattern(path("Zalog\\E_NumberZalog")));
 
@@ -80,20 +87,20 @@ public class Zalog extends Driver{
         }
     }
 
-//Observe
-    public void stop(){
+    //Observe
+    public void stop() {
         System.out.println("1111111111111111");
         ZalogRG.stopObserver();
     }
 
-    public void test(){
-        ZalogRG.onChange(new ObserverCallBack(){
+    public void test() {
+        ZalogRG.onChange(new ObserverCallBack() {
             @Override
-            public void changed(ObserveEvent event){
-                System.out.println("qqqqqqqqqqqq = "+event.getType());
+            public void changed(ObserveEvent event) {
+                System.out.println("qqqqqqqqqqqq = " + event.getType());
                 List<Match> rrr = event.getChanges();
                 rrr.get(0).highlight(1);
-               // event.getRegion().highlight(1);
+                // event.getRegion().highlight(1);
                 //ZalogRG.wait(2.0);
             }
         });
@@ -151,7 +158,7 @@ public class Zalog extends Driver{
 
             List<String[]> rs;
 
-            rs = Base.Query("select first 1 ID, \"Fam\"||\' \'||\"Imja\"||\' \'||\"Otc\" from \"PrFizLicList\"(null, 451) where \"Fam\" like '"+like+"%' order by \"Fam\",\"Imja\",\"Otc\"");
+            rs = Base.Query("select first 1 ID, \"Fam\"||\' \'||\"Imja\"||\' \'||\"Otc\" from \"PrFizLicList\"(null, 451) where \"Fam\" like '" + like + "%' order by \"Fam\",\"Imja\",\"Otc\"");
             Base.Closed();
             fioRG.type(Common.toEnglish(rs.get(0)[1]));
             fioRG.type(Key.ENTER);
@@ -169,7 +176,7 @@ public class Zalog extends Driver{
             Pattern a = new Pattern(path("Zalog\\E_AlgorithmKredita"));
             AlgorithmRG = ZalogRG.find(a);
 
-            AlgorithmRG = AlgorithmRG.right(AlgorithmRG.getW()*5);
+            AlgorithmRG = AlgorithmRG.right(AlgorithmRG.getW() * 5);
             AlgorithmRG.click();
 
             Common.ClearEdit(AlgorithmRG);
@@ -183,11 +190,11 @@ public class Zalog extends Driver{
             rs = b.Query(" select  \"TalmbAlgorithm\".id, \"TalmbAlgorithm\".\"Name\" from \"TalmbAlgorithm\" " +
                     "      left join \"TalmbAlgorithmParam\" on \"TalmbAlgorithmParam\".\"IDTalmbAlgorithm\" = \"TalmbAlgorithm\".id " +
                     "      where \"TalmbAlgorithmParam\".\"IsUsed\" = 1 " +
-                    "      and \"TalmbAlgorithm\".\"Name\" = '"+ name + "'");
+                    "      and \"TalmbAlgorithm\".\"Name\" = '" + name + "'");
             b.Closed();
             if (rs.size() >= 1) {
                 TalmbAlgorithm_ID = Integer.parseInt(rs.get(0)[0]);
-                AlgorithmRG.type(Common.toEnglish(rs.get(0)[1]));                
+                AlgorithmRG.type(Common.toEnglish(rs.get(0)[1]));
             }
 
             AlgorithmRG.type(Key.ENTER);
@@ -199,13 +206,13 @@ public class Zalog extends Driver{
 
     }
 
-    public void setkolperiod(int n){
+    public void setCountPeriod(int n) {
         Region KolPeriod;
         int i;
 
         try {
             KolPeriod = ZalogRG.find(new Pattern(path("Zalog\\E_KolPeriod")));
-            i = KolPeriod.getW()/2+1;
+            i = KolPeriod.getW() / 2 + 1;
 
             KolPeriod.setX(KolPeriod.getX() + i);
             KolPeriod.setW(i);
@@ -217,21 +224,21 @@ public class Zalog extends Driver{
             boolean on;
             //выкл/вкл NumLock так как коммбинация SHIFT +HOME не работает с включенным NumLock
             on = (Key.isLockOn('\ue03b'));
-            if(on)
+            if (on)
                 KolPeriod.type(Key.NUM_LOCK);
 
             KolPeriod.type(Key.HOME, Key.SHIFT);
             KolPeriod.type(Key.BACKSPACE);
             KolPeriod.type(String.valueOf(n));
 
-            if(on)
+            if (on)
                 KolPeriod.type(Key.NUM_LOCK);
         } catch (FindFailed findFailed) {
             findFailed.printStackTrace();
         }
     }
 
-    public void setDateReturn(String StrDateReturn)  {
+    public void setDateReturn(String StrDateReturn) {
         int n;
         if (StrDateReturn == null) StrDateReturn = "currentdate";
 
@@ -246,10 +253,10 @@ public class Zalog extends Driver{
             e.printStackTrace();
         }
 
-        n = (int)((DateReturn.getTimeInMillis() - WorkDate.getTimeInMillis())/(1000*60*60*24));
+        n = (int) ((DateReturn.getTimeInMillis() - WorkDate.getTimeInMillis()) / (1000 * 60 * 60 * 24));
         System.out.println(n);
 
-        // setkolperiod(n);
+        // setCountPeriod(n);
 
     }
 
@@ -311,9 +318,9 @@ public class Zalog extends Driver{
         b.Connect();
 
         rs = b.Query("select \"TalmbMaterials\".id, \"TalmbMaterials\".\"MaterialName\" " +
-                     "from \"TalmbMaterials\" " +
-                     "where " +
-                     "lower(\"TalmbMaterials\".\"MaterialName\") like '"+Name+"%'");
+                "from \"TalmbMaterials\" " +
+                "where " +
+                "lower(\"TalmbMaterials\".\"MaterialName\") like '" + Name + "%'");
         b.Closed();
 
         TalmbMaterials_ID = Integer.parseInt(rs.get(0)[0]);
@@ -323,26 +330,26 @@ public class Zalog extends Driver{
         ZalogRG.type(Key.ENTER);
     }
 
-    public void SelectProba(String ProbaName, String Suffix){
+    public void SelectProba(String ProbaName, String Suffix) {
         Region SelectProbaRG, ProbaNameRG;
         List<String[]> rs;
         DataBase b;
         String likeSuffix = "";
         try {
-            if (Suffix!= "") likeSuffix = "and \"Suffix\" like '"+Suffix+"%'";
+            if (Suffix != "") likeSuffix = "and \"Suffix\" like '" + Suffix + "%'";
 
             b = new DataBase();
             b.Connect();
             rs = b.Query("select distinct \"ProbeName\", \"Suffix\" from \"ViADlmbMaterialPrice\"" +
-                            " where \"TalmbMaterials_ID\"="+TalmbMaterials_ID+
-                            " and \"IDTalmbAlgorithm\"="+TalmbAlgorithm_ID+
-                            " and \"ProbeName\" like '"+ProbaName+"%' "+likeSuffix);
+                    " where \"TalmbMaterials_ID\"=" + TalmbMaterials_ID +
+                    " and \"IDTalmbAlgorithm\"=" + TalmbAlgorithm_ID +
+                    " and \"ProbeName\" like '" + ProbaName + "%' " + likeSuffix);
             b.Closed();
-            System.out.println("asdsadsaasd=========="+rs.size());
+            System.out.println("asdsadsaasd==========" + rs.size());
 
             SelectProbaRG = getDriver().find(new Pattern(path("Zalog\\F_SelectProba")));
             ProbaNameRG = SelectProbaRG.find(new Pattern(path("Zalog\\E_Proba")));
-            ProbaNameRG = ProbaNameRG.right(ProbaNameRG.getW()*2);
+            ProbaNameRG = ProbaNameRG.right(ProbaNameRG.getW() * 2);
             ProbaNameRG.click();
             ProbaNameRG.type(Common.toEnglish(ProbaName));
 
@@ -360,7 +367,7 @@ public class Zalog extends Driver{
         }
     }
 
-    public void setAmount(int kol){
+    public void setAmount(int kol) {
         Region AmountRG;
         try {
             AmountRG = getDriver().find(new Pattern(path("Zalog\\F_Amount")));
@@ -374,7 +381,7 @@ public class Zalog extends Driver{
         }
     }
 
-    public void setWeight(double weight ){
+    public void setWeight(double weight) {
         Region WeightRG, NtWtRG;
         try {
             WeightRG = getDriver().find(new Pattern(path("Zalog\\F_Weight")));
@@ -390,16 +397,16 @@ public class Zalog extends Driver{
         }
     }
 
-    public String getNumberZalog(){
-        return  NumberZalog;
+    public String getNumberZalog() {
+        return NumberZalog;
     }
 
-    public double getSummPercent(){
+    public double getSummPercent() {
         Region SummPercentRG;
         try {
             SummPercentRG = ZalogRG.find(new Pattern(path("Zalog\\E_PercentSumm")));
-           // SummPercentRG = SummPercentRG.right(SummPercentRG.getW()+2);
-           //SummPercentRG.highlight(1);
+            // SummPercentRG = SummPercentRG.right(SummPercentRG.getW()+2);
+            //SummPercentRG.highlight(1);
             SummPercentRG.click();
             return Float.parseFloat(Common.getEditValue(SummPercentRG));
 
