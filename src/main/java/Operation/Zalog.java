@@ -44,6 +44,7 @@ public class Zalog extends Driver {
     }
 
     public void SetDiscountCardNumber(String CardNumber) {
+        if (CardNumber == "") return;
         Region CardNumberRG, CardConfirmationRG;
         try {
             CardNumberRG = ZalogRG.find(new Pattern(path("Zalog\\E_DiscountCardNumber")));

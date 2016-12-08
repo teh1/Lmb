@@ -17,8 +17,6 @@ public class Perezalog extends Driver {
             Region HeadPerezalogRG, NumberPerezalogRG;
             Pattern PerezalogPT;
 
-            PerezalogPT = new Pattern(path("Perezalog\\F_Perezalog"));
-
             HeadPerezalogRG =getDriver().wait((new Pattern(path("Perezalog\\F_HeadPerezalog"))).similar((float) 0.7),20);
             HeadPerezalogRG = HeadPerezalogRG.find(new Pattern(path("Perezalog\\T_TitlePerezalog")));
             HeadPerezalogRG.hover();
@@ -26,6 +24,7 @@ public class Perezalog extends Driver {
             HeadPerezalogRG.mouseMove(-1*HeadPerezalogRG.getX()+17,-1*HeadPerezalogRG.getY()+90);
             HeadPerezalogRG.mouseUp(Button.LEFT);
 
+            PerezalogPT = new Pattern(path("Perezalog\\F_Perezalog"));
             PerezalogRG = getDriver().wait(PerezalogPT.similar((float) 0.65),5);
 
             /*NumberPerezalogRG = PerezalogRG.find(new Pattern(path("Perezalog\\E_NumberZalog")));
