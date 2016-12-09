@@ -21,7 +21,7 @@ public class Vykup extends Driver {
             HeadVykupRG.mouseMove(-1 * HeadVykupRG.getX() + 17, -1 * HeadVykupRG.getY() + 90);
             HeadVykupRG.mouseUp(Button.LEFT);
 
-            VykupPT = new Pattern(path("Perezalog\\F_Vykup"));
+            VykupPT = new Pattern(path("Vykup\\F_Vykup"));
             VykupRG = getDriver().wait(VykupPT.similar((float) 0.60), 5);
 
 

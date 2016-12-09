@@ -8,10 +8,10 @@ import org.sikuli.script.Region;
 
 import java.net.URISyntaxException;
 
-public class MainMenu extends Driver{
+public class MainMenu extends Driver {
 
     private Pattern Menu = null;
-    private Region Menu_region = null;;
+    private Region Menu_region = null, mSessiaRG = null, subSessiaRG = null;
 
     public MainMenu() {
         Menu = new Pattern(path("Menu\\Menu"));
@@ -30,9 +30,10 @@ public class MainMenu extends Driver{
     }
 
     public Region mSessia() {
-
+        if (mSessiaRG != null) return mSessiaRG;
         try {
-            return mMenu().find(new Pattern(path("Menu\\mSessia")));
+            mSessiaRG = mMenu().find(new Pattern(path("Menu\\mSessia")));
+            return mSessiaRG;
         } catch (FindFailed findFailed) {
             findFailed.printStackTrace();
         }
@@ -41,25 +42,20 @@ public class MainMenu extends Driver{
 
 
     public Region subSessia(int num) {
-        Region subSessiaRG = null;
-
+        Region tmpsubSessiaRG;
         try {
-            subSessiaRG = getDriver().wait(new Pattern(path("Menu\\subSessia")));
-            subSessiaRG.setRaster(2, 1);
-            return subSessiaRG.getCell(num, 0);
+            if (subSessiaRG == null)
+                subSessiaRG = getDriver().wait(new Pattern(path("Menu\\subSessia")));
+            tmpsubSessiaRG = subSessiaRG;
+            tmpsubSessiaRG.setRaster(2, 1);
+            return tmpsubSessiaRG.getCell(num, 0);
         } catch (FindFailed findFailed) {
             findFailed.printStackTrace();
         }
-
-        //Menu_region.setRaster(1, 10);
-
         return null;
     }
 
-
-
-        //mSessia.highlight(1).click();
-
+    //mSessia.highlight(1).click();
 
         /*subSessia = getDriver().wait(new Pattern(path("Menu\\subSessia")));
     subSessia.setRaster(2, 1);

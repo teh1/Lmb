@@ -1,5 +1,6 @@
 package TestCreateZalog;
 
+import Operation.Vykup;
 import Operation.Zalog;
 import Operation.Perezalog;
 import Menu.ShortCutBar;
@@ -49,21 +50,24 @@ public class NewZalog  extends  Zalog {
 
         //region Описание тестов
         tests.put("NumberTest","1");
+        tests.put("Run","1");
         tests.put("FIO","");
         tests.put("DateZalogOffset","-10"); //дата залога, указывается смещении в днях относиельно текущей даты
         tests.put("Algorithm","День");
         tests.put("DiscountCardNumber","11000003");
         tests.put("CountPeriodZalog","10");
         tests.put("GroupMaino","Драг.Металл");
-        tests.put("createPerezalog","1"); //0 - перезалог не создается
+        tests.put("createPerezalog","0"); //0 - перезалог не создается
         tests.put("DatePerezalogOffset","0"); //дата перезалога, указывается смещении в днях относиельно текущей даты
         tests.put("CountPeriodPerezalog","11");
         tests.put("createVykup","1");
+        tests.put("DateVykupOffset","1");
         tests.put("Comment","");
         listOfTests.add(new HashMap<String, String>(tests));
 
         //region Описание тест2
         tests.put("NumberTest","2");
+        tests.put("Run","0");
         tests.put("FIO","");
         tests.put("DateZalogOffset","-10"); //дата залога, указывается смещении в лнях относиельно текущей даты
         tests.put("Algorithm","День");
@@ -71,7 +75,10 @@ public class NewZalog  extends  Zalog {
         tests.put("CountPeriodZalog","10");
         tests.put("GroupMaino","Драг.Металл");
         tests.put("createPerezalog","0"); //0 - перезалог не создается
+        tests.put("DatePerezalogOffset","0"); //дата перезалога, указывается смещении в днях относиельно текущей даты
+        tests.put("CountPeriodPerezalog","0");
         tests.put("createVykup","0"); //0 - перезалог не создается
+        tests.put("DateVykupOffset","1");
         tests.put("Comment","");
         listOfTests.add(new HashMap<String, String>(tests));
         //endregion Описание тест2
@@ -88,6 +95,8 @@ public class NewZalog  extends  Zalog {
 
 
        for (Map<String, String> t : listOfTests) {
+           if (t.get("Run").equals("0")) continue;
+
            tmpDate = Calendar.getInstance();
            tmpDate.add(Calendar.DATE, Integer.valueOf(t.get("DateZalogOffset"))); //вычисляем дату залога
            Common.ChangeWorkDate(dateFormat.format(tmpDate.getTime()));
@@ -140,16 +149,21 @@ public class NewZalog  extends  Zalog {
 
            }
            //endregion
-           //region Продление
+           //region Выкуп
+
            if(!t.get("createVykup").equals("0")) {
                tmpDate = Calendar.getInstance();
-               tmpDate.add(Calendar.DATE, Integer.valueOf(t.get("DatePerezalogOffset"))); //вычисляем дату выкупа
+               tmpDate.add(Calendar.DATE, Integer.valueOf(t.get("DateVykupOffset"))); //вычисляем дату выкупа
                Common.ChangeWorkDate(dateFormat.format(tmpDate.getTime()));
+               bar.ChoiceVykup();
 
-
-
+               Vykup V = new Vykup();
+               V.Open(Z.getNumberZalog());
+               V.Init();
+               V.saveVykup();
+               V.closeVykup();
            }
-           //endregion Продление
+           //endregion Выкуп
 
 
         }

@@ -48,7 +48,6 @@ public class Zalog extends Driver {
         Region CardNumberRG, CardConfirmationRG;
         try {
             CardNumberRG = ZalogRG.find(new Pattern(path("Zalog\\E_DiscountCardNumber")));
-            CardNumberRG.highlight(2);
             CardNumberRG.click();
             CardNumberRG.type(CardNumber);
             CardConfirmationRG = CardNumberRG.find(new Pattern(path("Zalog\\B_CardConfirmation")));

@@ -30,10 +30,10 @@ public class ShortCutBar extends  Driver{
         BarRG.find(PerezalogButtonPT).click();
 
     }
-/*
+
     public void ChoiceVykup() throws FindFailed, URISyntaxException {
         Pattern VykupButtonPT;
         VykupButtonPT = new Pattern(path("ShortCutBar\\VykupButton"));
         BarRG.find(VykupButtonPT).click();
-    }*/
+    }
 }

@@ -19,6 +19,7 @@ import java.util.Map;
 public class Common extends Driver {
 
     public static Calendar WorkDate = new GregorianCalendar(2016,5,1);
+    private MainMenu menu = new MainMenu();
 
     public static String toEnglish(String RusStr){
         String str = "";
@@ -119,7 +120,7 @@ public class Common extends Driver {
 
     public void ChangeWorkDate(String newDate) {
         Region WorkDate;
-        MainMenu menu = new MainMenu();
+        //MainMenu menu = new MainMenu();
         menu.mSessia().click();
         menu.subSessia(0).click(); //меню Завершить сессию, 0-й пункт меню
         try {
