@@ -26,6 +26,7 @@ public class Zalog extends Driver {
     private int TalmbAlgorithm_ID = -1;
     private int GroupMaino_ID = -1; //заглушка, это покамесь не айди
     private String NumberZalog;
+    //private int IDZalog = 0;
 
     public void SetDiscountCardNumber() {
         //нужно дописать зачем не знаю. рандомная карточка что ли...
@@ -414,6 +415,23 @@ public class Zalog extends Driver {
             findFailed.printStackTrace();
         }
         return -1.0;
+    }
+
+    public double getSummPercentDB() { //factresult
+        if (NumberZalog == null || NumberZalog.isEmpty() ) return -1;
+
+        String[] InputText = NumberZalog.split(" ");
+
+        DataBase Base = new DataBase();
+        Base.Connect();
+
+        List<String[]> rs;
+        rs = Base.Query("select \"TalmbZalog\".\"SummaByUsingKredit\" from \"TalmbZalog\" " +
+                "left join  \"TalmbNumberDog\" on \"TalmbZalog\".\"NumberDog\" = \"TalmbNumberDog\".id " +
+                "where \"TalmbNumberDog\".\"DogNum\" ="+InputText[1]+" and \"TalmbNumberDog\".\"DogSeria\" = '"+InputText[0]+"'");
+        Base.Closed();
+
+        return Double.parseDouble(rs.get(0)[0]);
     }
 
     public void saveZalog() {

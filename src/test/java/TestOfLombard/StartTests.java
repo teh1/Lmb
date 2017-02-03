@@ -127,10 +127,12 @@ public class StartTests extends  Zalog {
             Z.SelectProba("583","");
             Z.setAmount(2);
             Z.setWeight(1.3);
-           //  Assert.assertEquals(85.68,Z.getSummPercent(),0.00001);
+//             Assert.assertEquals(85.68,Z.getSummPercent(),0.00001);
 
             Z.saveZalog();
             Z.closeZalog();
+
+           //Z.getSummPercentDB(); проценты из базы
 
            //region Продление
            if (!t.get("СreatePerezalog").equals("0")){
@@ -149,6 +151,8 @@ public class StartTests extends  Zalog {
                P.setCountPeriods(Integer.valueOf(t.get("CountPeriodPerezalog")));
                P.savePerezalog();
                P.closePerezalog();
+
+               System.out.println("qqqq="+P.getSumPersentForUseDB());
 
            }
            //endregion

@@ -1,15 +1,19 @@
 package Operation;
 
 import Common.Common;
+import Common.DataBase;
 import org.sikuli.script.*;
 
 import Common.Driver;
+
+import java.util.List;
 
 
 public class Perezalog extends Driver {
 
     private Region PerezalogRG;
-    private String NumberPerezalog;
+    private String NumberZalog = "";
+    //private String NumberPerezalog;
 
     public void Init(){
         try {
@@ -40,6 +44,7 @@ public class Perezalog extends Driver {
 
     public void Open(String NumberZalog) throws FindFailed {
         if (NumberZalog == null || NumberZalog.isEmpty() ) return;
+        this.NumberZalog = NumberZalog;
         Pattern InputNumberZalogPT;
         Region InputNumberZalogRG;
 
@@ -94,17 +99,42 @@ public class Perezalog extends Driver {
         /* subSessiaRG.setRaster(2, 1);
             return subSessiaRG.getCell(num, 0);*/
     }
-    public void getSumPersentForUse(){
+
+    public double getSumPersentForUse(){
         Region SumsRG, SumPersentUseRG;
         try {
+
+            //Если оплата процентов в конце
             SumsRG = PerezalogRG.find(new Pattern(path("Perezalog\\F_Sums")));
             SumsRG.setRaster(4,1);
             SumPersentUseRG = SumsRG.getCell(3,0);
-
+            SumPersentUseRG.click();
+            return Double.parseDouble(Common.getEditValue(SumPersentUseRG));
+                    //Float.parseFloat(Common.getEditValue(SumPersentUseRG));
+            //если оплата сразу
+            //на форме это другое поле
 
         } catch (FindFailed findFailed) {
             findFailed.printStackTrace();
         }
+        return -1;
+    }
+
+    public double getSumPersentForUseDB(){
+        String[] InputText = NumberZalog.split(" ");
+
+        DataBase Base = new DataBase();
+        Base.Connect();
+
+        List<String[]> rs;
+        rs = Base.Query("select \"TalmbPerezlog\".\"SummaByProdlenie\"\n" +
+                "  from \"TalmbZalog\"\n" +
+                "  left join \"TalmbNumberDog\" on \"TalmbZalog\".\"NumberDog\" = \"TalmbNumberDog\".ID\n" +
+                "  left join \"TalmbPerezlog\" on \"TalmbPerezlog\".\"TalmbZalog_ID\" = \"TalmbZalog\".id\n" +
+                "  WHERE \"TalmbNumberDog\".\"DogNum\" ="+InputText[1]+" and \"TalmbNumberDog\".\"DogSeria\" = '"+InputText[0]+"'");
+        Base.Closed();
+
+        return Double.parseDouble(rs.get(0)[0]);
 
     }
 
