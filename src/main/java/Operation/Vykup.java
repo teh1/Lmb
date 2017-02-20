@@ -2,11 +2,15 @@ package Operation;
 
 import Common.Common;
 import Common.Driver;
+import Common.DataBase;
 import org.sikuli.script.*;
+
+import java.util.List;
 
 public class Vykup extends Driver {
     private Region VykupRG;
     private String NumberPerezalog;
+    private int IDVykup;
 
     public void Init() {
         try {
@@ -54,7 +58,22 @@ public class Vykup extends Driver {
         } catch (FindFailed findFailed) {
             findFailed.printStackTrace();
         }
+
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        DataBase b = new DataBase();
+        b.Connect();
+        List<String[]> rs = b.Query("select first 1 \"TalmbVykup\".id from \"TalmbVykup\" order by \"TalmbVykup\".id desc");
+        b.Closed();
+        if (rs.size() >= 1) {
+            IDVykup = Integer.parseInt(rs.get(0)[0]);
+        }
     }
+
+
 
     public void closeVykup() {
         Region ButtonCloseRG;
@@ -64,5 +83,12 @@ public class Vykup extends Driver {
         } catch (FindFailed findFailed) {
             findFailed.printStackTrace();
         }
+    }
+
+    public void saveIDVykupToBaseFactResult(int NumberOfTest) {
+        DataBase b = new DataBase();
+        b.Connect();
+        b.QueryUpdate("update \"TestsList\" set \"ID_Vykup\" = "+IDVykup+" where \"NumberTest\" = "+NumberOfTest);
+        b.Closed();
     }
 }

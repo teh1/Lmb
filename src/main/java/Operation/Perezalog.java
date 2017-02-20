@@ -13,6 +13,7 @@ public class Perezalog extends Driver {
 
     private Region PerezalogRG;
     private String NumberZalog = "";
+    private int IDPerezalog = -1;
     //private String NumberPerezalog;
 
     public void Init(){
@@ -146,6 +147,25 @@ public class Perezalog extends Driver {
         } catch (FindFailed findFailed) {
             findFailed.printStackTrace();
         }
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        DataBase b = new DataBase();
+        b.Connect();
+        List<String[]> rs = b.Query("select first 1 \"TalmbPerezlog\".id from \"TalmbPerezlog\" order by \"TalmbPerezlog\".id desc");
+        b.Closed();
+        if (rs.size() >= 1) {
+            IDPerezalog = Integer.parseInt(rs.get(0)[0]);
+        }
+    }
+
+    public void saveIDPerezalogToBaseFactResult(int NumberOfTest) {
+        DataBase b = new DataBase();
+        b.Connect();
+        b.QueryUpdate("update \"TestsList\" set \"ID_Perezalog\" = "+IDPerezalog+" where \"NumberTest\" = "+NumberOfTest);
+        b.Closed();
     }
 
     public void closePerezalog() {
@@ -177,10 +197,7 @@ public class Perezalog extends Driver {
         System.out.println(n);
 
         // setCountPeriod(n);
-
     }
-
-
     }*/
 
 }

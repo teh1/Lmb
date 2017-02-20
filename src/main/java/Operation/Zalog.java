@@ -25,6 +25,7 @@ public class Zalog extends Driver {
     private int TalmbMaterials_ID;
     private int TalmbAlgorithm_ID = -1;
     private int GroupMaino_ID = -1; //заглушка, это покамесь не айди
+    private  int IDZalog = -1;
     private String NumberZalog;
     //private int IDZalog = 0;
 
@@ -45,7 +46,7 @@ public class Zalog extends Driver {
     }
 
     public void SetDiscountCardNumber(String CardNumber) {
-        if (CardNumber == "") return;
+        if (CardNumber==null || CardNumber.isEmpty()) return;
         Region CardNumberRG, CardConfirmationRG;
         try {
             CardNumberRG = ZalogRG.find(new Pattern(path("Zalog\\E_DiscountCardNumber")));
@@ -189,6 +190,11 @@ public class Zalog extends Driver {
                     "      where \"TalmbAlgorithmParam\".\"IsUsed\" = 1 " +
                     "      and \"TalmbAlgorithm\".\"Name\" like '"+ name + "%'");*/
             rs = b.Query(" select  \"TalmbAlgorithm\".id, \"TalmbAlgorithm\".\"Name\" from \"TalmbAlgorithm\" " +
+                    "      left join \"TalmbAlgorithmParam\" on \"TalmbAlgorithmParam\".\"IDTalmbAlgorithm\" = \"TalmbAlgorithm\".id " +
+                    "      where \"TalmbAlgorithmParam\".\"IsUsed\" = 1 " +
+                    "      and \"TalmbAlgorithm\".\"Name\" = '" + name + "'");
+
+            System.out.println(" select  \"TalmbAlgorithm\".id, \"TalmbAlgorithm\".\"Name\" from \"TalmbAlgorithm\" " +
                     "      left join \"TalmbAlgorithmParam\" on \"TalmbAlgorithmParam\".\"IDTalmbAlgorithm\" = \"TalmbAlgorithm\".id " +
                     "      where \"TalmbAlgorithmParam\".\"IsUsed\" = 1 " +
                     "      and \"TalmbAlgorithm\".\"Name\" = '" + name + "'");
@@ -434,6 +440,10 @@ public class Zalog extends Driver {
         return Double.parseDouble(rs.get(0)[0]);
     }
 
+    public int getIDZalog(){
+         return IDZalog;
+    }
+
     public void saveZalog() {
         Region ButtonSaveRG;
         try {
@@ -442,6 +452,27 @@ public class Zalog extends Driver {
         } catch (FindFailed findFailed) {
             findFailed.printStackTrace();
         }
+
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        DataBase b = new DataBase();
+        b.Connect();
+        List<String[]> rs = b.Query("select first 1 \"TalmbZalog\".id from \"TalmbZalog\" order by \"TalmbZalog\".id desc");
+        b.Closed();
+        if (rs.size() >= 1) {
+            IDZalog = Integer.parseInt(rs.get(0)[0]);
+        }
+    }
+
+    public void saveIDZalogToBaseFactResult(int NumberOfTest) {
+        DataBase b = new DataBase();
+        b.Connect();
+        b.QueryUpdate("update \"TestsList\" set \"ID_Zalog\" = "+IDZalog+" where \"NumberTest\" = "+NumberOfTest);
+        b.Closed();
+
     }
 
     public void closeZalog() {

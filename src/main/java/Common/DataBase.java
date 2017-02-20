@@ -2,7 +2,9 @@ package Common;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class DataBase {
     private java.sql.Connection conn = null;
@@ -68,6 +70,55 @@ public class DataBase {
         //rs.getFetchSize() не работает с процедурами.., только таблици и то не факт
         //rs.last() не работает на фаерберде
         return list;
+    }
+
+
+    public List<Map<String, String>> QueryMD(String query) {
+        // conn.setAutoCommit(false);
+        ResultSetMetaData MD;
+        int colmn = 0;
+        //список масивов, элемент списка = масиву - одной строчке рекзульата запроса
+        //List<String[]> list = new ArrayList<>();
+        Map<String,String> rows = new HashMap<String, String>();
+        List<Map<String, String>> ListOfRows = new ArrayList<Map<String, String>>();
+        try {
+            stmt = conn.createStatement();
+            if (query == null) return null;
+            rs = stmt.executeQuery(query);
+            //полученние метаданных
+            MD = rs.getMetaData();
+            //Количество колонок в результате запроса, для создания массива
+            colmn = MD.getColumnCount();
+            int i=0;
+            while(rs.next()){
+
+                for(int j=1; j<=colmn; j++)
+                    rows.put(MD.getColumnName(j),rs.getString(j));
+
+                ListOfRows.add(new HashMap<String, String>(rows));
+                i++;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        //rs.getFetchSize() не работает с процедурами.., только таблици и то не факт
+        //rs.last() не работает на фаерберде
+        return ListOfRows;
+    }
+
+    public int QueryUpdate(String query) {
+        // conn.setAutoCommit(false);
+        int res = -1;
+
+        try {
+            stmt = conn.createStatement();
+            if (query == null) return -1;
+            res = stmt.executeUpdate(query);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return res;
     }
 
     public void Closed() {
