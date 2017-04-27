@@ -185,23 +185,22 @@ public class Zalog extends Driver {
 
             DataBase b = new DataBase();
             b.Connect();
-            /*rs = b.Query(" select  \"TalmbAlgorithm\".id, \"TalmbAlgorithm\".\"Name\" from \"TalmbAlgorithm\" " +
-                    "      left join \"TalmbAlgorithmParam\" on \"TalmbAlgorithmParam\".\"IDTalmbAlgorithm\" = \"TalmbAlgorithm\".id " +
-                    "      where \"TalmbAlgorithmParam\".\"IsUsed\" = 1 " +
-                    "      and \"TalmbAlgorithm\".\"Name\" like '"+ name + "%'");*/
             rs = b.Query(" select  \"TalmbAlgorithm\".id, \"TalmbAlgorithm\".\"Name\" from \"TalmbAlgorithm\" " +
                     "      left join \"TalmbAlgorithmParam\" on \"TalmbAlgorithmParam\".\"IDTalmbAlgorithm\" = \"TalmbAlgorithm\".id " +
                     "      where \"TalmbAlgorithmParam\".\"IsUsed\" = 1 " +
                     "      and \"TalmbAlgorithm\".\"Name\" = '" + name + "'");
 
-            System.out.println(" select  \"TalmbAlgorithm\".id, \"TalmbAlgorithm\".\"Name\" from \"TalmbAlgorithm\" " +
-                    "      left join \"TalmbAlgorithmParam\" on \"TalmbAlgorithmParam\".\"IDTalmbAlgorithm\" = \"TalmbAlgorithm\".id " +
-                    "      where \"TalmbAlgorithmParam\".\"IsUsed\" = 1 " +
-                    "      and \"TalmbAlgorithm\".\"Name\" = '" + name + "'");
+            //System.out.println("11111" + name);
             b.Closed();
             if (rs.size() >= 1) {
                 TalmbAlgorithm_ID = Integer.parseInt(rs.get(0)[0]);
                 AlgorithmRG.type(Common.toEnglish(rs.get(0)[1]));
+            }
+
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
 
             AlgorithmRG.type(Key.ENTER);
@@ -209,8 +208,6 @@ public class Zalog extends Driver {
         } catch (FindFailed findFailed) {
             findFailed.printStackTrace();
         }
-
-
     }
 
     public void setCountPeriod(int n) {
@@ -454,7 +451,7 @@ public class Zalog extends Driver {
         }
 
         try {
-            Thread.sleep(500);
+            Thread.sleep(1000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

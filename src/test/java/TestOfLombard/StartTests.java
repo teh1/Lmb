@@ -6,6 +6,7 @@ import Operation.Perezalog;
 import Menu.ShortCutBar;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.After;
 import Common.Common;
 import Common.DataBase;
 
@@ -61,7 +62,6 @@ public class StartTests extends  Zalog {
 
             if (test.get("Run").equals("0")) continue;
             listOfTests.add(new HashMap<String, String>(test)); //Добавление в список тестов
-            System.out.println("sdsdsd="+test.get("Discount"));
         }
     }
 
@@ -177,5 +177,17 @@ public class StartTests extends  Zalog {
        // MainMenu menu = new MainMenu();
         //menu.mSessia().click();
         //menu.subSessia(0).click();
+    }
+
+    @After
+    public void after(){
+        Calendar tmpDate;
+        Common Common = new Common();
+
+        tmpDate = Calendar.getInstance();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
+
+        Common.ChangeWorkDate(dateFormat.format(tmpDate.getTime()));
+
     }
 }
